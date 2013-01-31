@@ -1,21 +1,22 @@
 #!/usr/bin/env ruby
 
-require 'optparse'
+require 'thor'
 
-options = {}
+module Runoff
+  class RunoffSource < Thor
+    desc 'all USERNAME', 'Export all chat history'
+    long_desc <<-LONGDESC
+      runoff all USERNAME will export all your Skype chat history as text files
+    LONGDESC
 
-option_parser = OptionParser.new do |opt|
-  opt.banner = 'Usage: runoff SKYPE_ACCOUNT_NAME [PATH_TO_THE_DATABASE_FILE] [OPTIONS]'
-  opt.separator ''
-  opt.separator 'Options'
+    # TODO: add default locations
+    method_option :from, alias: '-f', desc: 'Specify the location of the main.db file'
+    method_option :to, alias: '-t', desc: 'Specify where to put export files'
 
-  opt.on '-h', '--help', 'help' do
-    puts option_parser
+    def all(username)
+      # TODO: export skype chat history
+    end
   end
-end
 
-option_parser.parse!
-
-unless ARGV[0].empty?
-  # do the magic
+  RunoffSource.start
 end
