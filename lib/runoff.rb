@@ -1,5 +1,2 @@
 require "runoff/version"
-
-module Runoff
-
-end
+require "runoff/runoff_location"
