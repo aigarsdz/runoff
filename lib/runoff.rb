@@ -1,2 +1,2 @@
 require "runoff/version"
-require "runoff/runoff_location"
+require "runoff/location"
