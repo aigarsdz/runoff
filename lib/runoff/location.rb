@@ -9,5 +9,13 @@ module Runoff
         "~/Library/Application Support/Skype/#{skype_username}/main.db"
       end
     end
+
+    def self.home_path
+      if RbConfig::CONFIG['host_os'] =~ /mingw/
+        ENV['USERPROFILE']
+      else
+        ENV['HOME']
+      end
+    end
   end
 end

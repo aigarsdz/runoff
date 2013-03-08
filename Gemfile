@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in runoff.gemspec
+# gem's dependencies are specified in runoff.gemspec
 gemspec

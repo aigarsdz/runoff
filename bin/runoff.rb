@@ -17,7 +17,14 @@ module Runoff
     method_option :to, alias: '-t', desc: 'Specify where to put export files'
 
     def all(skype_username)
-      main_db_file_location = Runoff::Location.default_skype_data_location host_username, skype_username
+      main_db_file_location = Location.default_skype_data_location skype_username
+      composition = Composition.new main_db_file_location
+      destination = options[:to] || Location.home_path
+
+      composition.export destination
+
+    rescue IOError => message
+      puts message
     end
   end
 
