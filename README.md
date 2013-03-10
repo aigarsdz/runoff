@@ -13,26 +13,22 @@ Sorry, this gem is still in development, therefore I haven't published it to Rub
 
 The current version only works with the default Skype location.
 
-<pre><code>
-runoff all skype_username # this will save all the files in your home directory
+<pre><code>runoff all skype_username # this will save all the files in your home directory
 </code></pre>
 
 To export files to a specific directory you can use <code>--to</code> or <code>-t</code> option.
 
-<pre><code>
-runoff all skype_username --to ~/skype_backup
+<pre><code>runoff all skype_username --to ~/skype_backup
 </code></pre>
 
 If you're confused, you can get some help.
 
-<pre><code>
-runoff help all
+<pre><code>runoff help all
 </code></pre>
 
 If you don't want to install the development version, clone down the repository and call the executable file directly!
 
-<pre><code>
-ruby -Ilib ./bin/runoff.rb
+<pre><code>ruby -Ilib ./bin/runoff.rb
 </code></pre>
 
 ## What else?
