@@ -13,10 +13,10 @@ module Runoff
 
   # Public: Entry point for the executable. Processes the CLI input from the user.
   class Source < Thor
-    desc 'all SKYPE_USERNAME', 'Export all chat history'
+    desc 'all [SKYPE_USERNAME] [OPTIONS]', 'Export all chat history'
 
     long_desc <<-LONGDESC
-      runoff all SKYPE_USERNAME will export all your Skype chat history as text files.
+      runoff all [SKYPE_USERNAME] will export all your Skype chat history as text files.
 
       SKYPE_USERNAME - the Skype account username, which data you want to access
     LONGDESC
@@ -33,8 +33,8 @@ module Runoff
     #
     #   all skype_username
     #   # => Finished: 8 files were exported
-    def all(skype_username)
-      main_db_file_location = Location.default_skype_data_location skype_username
+    def all(skype_username = nil)
+      main_db_file_location = options[:from] || Location.default_skype_data_location skype_username
       composition = Composition.new main_db_file_location
       destination = options[:to] || Location.home_path
       file_count = composition.export destination
