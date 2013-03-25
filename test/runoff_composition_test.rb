@@ -3,31 +3,56 @@ require 'minitest/autorun'
 require 'runoff'
 
 describe Runoff::Composition do
+  before { @composition = Runoff::Composition.new 'test/test_db.sqlite' }
+
   it "must raise an IOError if the file that is passed to the constructor doesn't exist" do
     ->{ composition = Runoff::Composition.new 'not_existing.db' }.must_raise IOError
   end
 
   it "must have a getter method for exported filenames" do
-    composition = Runoff::Composition.new 'test/test_db.sqlite'
-
-    composition.must_respond_to :exported_filenames
+    @composition.must_respond_to :exported_filenames
   end
 
-  describe "#parse_chatname" do
-    before { @composition = Runoff::Composition.new 'test/test_db.sqlite' }
+  it "must remove all starting and ending dashes from a string" do
+    string = "---example--"
+    valid_name = @composition.send :trim_dashes, string
 
-    it "must return a valid and readable filename from a raw chatname" do
-      raw_chatname = '#something/$else;521357125362'
-      chatname = @composition.send :parse_chatname, raw_chatname
+    valid_name.must_equal 'example'
+  end
 
-      chatname.must_equal 'something-else.txt'
-    end
+  it "must return a valid and readable name from a raw chatname" do
+    raw_chatname = '#something/$else;521357125362'
+    chatname = @composition.send :parse_chatname, raw_chatname
 
-    it "must raise a StandarError if the chatname is in the wrong format" do
-      raw_chatname = '#something/$;521357125362'
+    chatname.must_equal 'something-else'
+  end
 
-      ->{ @composition.send :parse_chatname, raw_chatname }.must_raise StandardError
-    end
+  it "must return a valid and readable name from broken chatname records" do
+    raw_chatname = '#something/$521357125362'
+    chatname = @composition.send :parse_chatname, raw_chatname
+
+    chatname.must_equal 'something'
+  end
+
+  it "must return a chatname without the extra symbols" do
+    raw_chatname = '#something/$else;521357125362'
+    chatname = @composition.send :partly_parse_chatname, raw_chatname
+
+    chatname.must_equal '#something/$else;'
+  end
+
+  it "must return a chatname without the extra symbols for broken chatname records" do
+    raw_chatname = '#something/$521357125362'
+    chatname = @composition.send :partly_parse_chatname, raw_chatname
+
+    chatname.must_equal '#something/$'
+  end
+
+  it "must return parsed chatnames together with partly parsed chatnames" do
+    chatnames, raw_chatnames = @composition.get_chatnames
+
+    chatnames.must_equal ['something-more', 'something-else']
+    raw_chatnames.must_equal ['#something/$more;', '#something/$else;']
   end
 
   describe "#save_to_file" do
@@ -48,12 +73,6 @@ describe Runoff::Composition do
     end
 
     after { FileUtils.rm_rf 'test/tmp/.' }
-
-    it "must print an error message if the chatname is in the wrong format" do
-      ->{ @composition.send :save_to_file, @incorrect_chat_record, 'test/tmp' }.must_output(
-        "Skipping #something/$;521357125362: Chatname in a wrong format\n"
-      )
-    end
 
     it "must write chat content to file" do
       @incorrect_chat_record[:chatname] = '#something/$else;521357125362'
@@ -80,6 +99,17 @@ describe Runoff::Composition do
     it "must return a count of the exported filenames" do
       composition = Runoff::Composition.new 'test/test_db.sqlite'
       file_count = composition.export 'test/tmp'
+
+      file_count.must_equal 2
+    end
+  end
+
+  describe "#export_chats" do
+    after { FileUtils.rm_rf 'test/tmp/.' }
+
+    it "must return a count of the exported filenames" do
+      composition = Runoff::Composition.new 'test/test_db.sqlite'
+      file_count = composition.export_chats ['#something/$more;', '#something/$else;'], 'test/tmp'
 
       file_count.must_equal 2
     end
