@@ -7,37 +7,39 @@ SDBR is written in C# using WPF, therefore it runs only on Windows. Moreover, it
 
 ## Install
 
-Sorry, this gem is still in development, therefore I haven't published it to RubyGems yet, but you can build it locally and install it that way.
+    gem install runoff
 
 ## Usage
 
-The current version only works with the default Skype location.
+To export all the chat history.
 
-<pre><code>runoff all skype_username # this will save all the files in your home directory
-</code></pre>
+    # save all the files in your home directory
+    runoff all skype_username
 
-To export files to a specific directory you can use <code>--to</code> or <code>-t</code> option.
+    # save the files in a specific directory
+    runoff all skype_username -t ~/skype_backup
 
-<pre><code>runoff all skype_username --to ~/skype_backup
-</code></pre>
+    # export database that is'n located in the default path
+    runoff all -f ~/main.db -t ~/skype_backup
+
+To export specific chats.
+
+    runoff chat skype_username -t ~/skype_backup
 
 If you're confused, you can get some help.
 
-<pre><code>runoff help all
-</code></pre>
+    runoff help all
 
-If you don't want to install the development version, clone down the repository and call the executable file directly!
+## Problems
 
-<pre><code>ruby -Ilib ./bin/runoff.rb
-</code></pre>
+The current version (0.1.1) doesn't support Windows, but it will be fixed soon.
 
 ## What else?
 
-Things to do before runoff is ready to be published:
-- Add tests for the executable file.
-- Use <code>--from</code>/<code>-f</code> option to specify the location of main.db file.
-- Add comments to the code.
-
 Things to do in the future versions:
-- Add additional methods to export only specific conversations.
-- Append only new messages to the previously genetrated files instead of appending everything.
+
+- Fix sqlite path bug in Windows.
+- Append only new messages to the previously genetrated files instead of appending everything or create different versions for the files.
+- Add some colors.
+
+If you have something to say about this gem or anything else, you can find me on Twitter as [@AigarsDz](http://twitter.com/AigarsDz "@AigarsDz").
