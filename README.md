@@ -19,7 +19,7 @@ To export all the chat history.
     # save the files in a specific directory
     runoff all skype_username -t ~/skype_backup
 
-    # export database that is'n located in the default path
+    # export database that isn't located in the default path
     runoff all -f ~/main.db -t ~/skype_backup
 
 To export specific chats.
