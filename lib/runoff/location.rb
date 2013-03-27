@@ -21,16 +21,19 @@ module Runoff
     #
     #   On Windows:
     #   default_skype_data_location skype_username
-    #   # =>  C:\Users\user\AppData\Roaming\Skype\skype_username\main.db
+    #   # =>  /Users/user/AppData/Roaming/Skype/skype_username/main.db
     #
     # Returns a String that contains the path to the Skype database file.
     def self.default_skype_data_location(skype_username)
       if RbConfig::CONFIG['host_os'] =~ /mingw/
-        "#{ENV['APPDATA']}\\Skype\\#{skype_username}\\main.db"
+        location = "#{ENV['APPDATA']}\\Skype\\#{skype_username}\\main.db"
+
+        location.gsub! /\\/, '/'
+        location.gsub /^[a-zA-Z]:/, ''
       elsif RbConfig::CONFIG['host_os'] =~ /linux/
         "#{ENV['HOME']}/.Skype/#{skype_username}/main.db"
       else
-        "~/Library/Application Support/Skype/#{skype_username}/main.db"
+        "#{ENV['HOME']}/Library/Application Support/Skype/#{skype_username}/main.db"
       end
     end
 
