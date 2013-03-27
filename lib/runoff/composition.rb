@@ -103,6 +103,8 @@ module Runoff
       end
 
       @exported_filenames << filename
+    rescue StandardError
+      puts 'An error occured while parsing a chatname'
     end
 
     # Internal: Converts chatname from database to a valid file name.
