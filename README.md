@@ -30,15 +30,11 @@ If you're confused, you can get some help.
 
     runoff help all
 
-## Problems
-
-The current version (0.1.1) doesn't support Windows, but it will be fixed soon.
-
 ## What else?
 
 Things to do in the future versions:
 
-- Fix sqlite path bug in Windows.
+- Change the timestamp format (include time).
 - Append only new messages to the previously genetrated files instead of appending everything or create different versions for the files.
 - Add some colors.
 

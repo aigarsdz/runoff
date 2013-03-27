@@ -8,7 +8,7 @@ describe Runoff::Location do
       path = Runoff::Location.default_skype_data_location 'aidzis_skype'
 
       if RbConfig::CONFIG['host_os'] =~ /mingw/
-        path.must_match /[A-Z]:\\Users\\[a-zA-Z0-9]+\\AppData\\Roaming\\Skype\\aidzis_skype\\main\.db/
+        path.must_match /\/Users\/[a-zA-Z0-9]+\/AppData\/Roaming\/Skype\/aidzis_skype\/main\.db/
       elsif RbConfig::CONFIG['host_os'] =~ /linux/
         path.must_match /\/home\/[a-zA-Z0-9]+\/\.Skype\/aidzis_skype\/main\.db/
       else
