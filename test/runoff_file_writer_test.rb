@@ -24,6 +24,13 @@ describe Runoff::FileWriter do
     @test_object = ClassWithFileWriterMixin.new
   end
 
+  it "must return a string without Skype emotion XML tags" do
+    string = 'Some text <ss type="laugh">:D</ss>'
+    clean_string = @test_object.parse_body_xml string
+
+    clean_string.must_equal 'Some text :D'
+  end
+
   it "must remove all starting and ending dashes from a string" do
     string = "---example--"
     valid_name = @test_object.trim_dashes string

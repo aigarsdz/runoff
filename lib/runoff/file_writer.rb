@@ -11,7 +11,8 @@ module Runoff
     #   save_to_file record, '/home/username/skype_backup'
     def save_to_file(chat_record, output_directory)
       datetime = Time.at chat_record[:timestamp]
-      output_record = "[#{datetime.to_date}] #{chat_record[:from_dispname]}: #{chat_record[:body_xml]}"
+      output_record = "[#{datetime.strftime "%Y-%m-%d %H:%M:%S"}] "
+      output_record << "#{chat_record[:from_dispname]}: #{parse_body_xml chat_record[:body_xml]}"
       filename = "#{output_directory}/#{parse_chatname chat_record[:chatname]}.txt"
 
       File.open(filename, 'a') do |file|
@@ -70,8 +71,23 @@ module Runoff
     #
     # Returns a string without leading and ending dashes.
     def trim_dashes(string)
-      string = string.gsub /^-+/, ''
-      string.gsub /-+$/, ''
+      clean_string = string.gsub /^-+/, ''
+      clean_string.gsub /-+$/, ''
+    end
+
+    # Public: Remove Skype emotion tags.
+    #
+    # text - String containing XML data
+    #
+    # Examples
+    #
+    #   parse_body_xml "Some text <ss type="laugh">:D</ss>"
+    #   # => "Some text :D"
+    #
+    # Returns the duplicated String.
+    def parse_body_xml(text)
+      clean_text = text.gsub /<ss type=".+">/, ''
+      clean_text.gsub /<\/ss>/, ''
     end
   end
 end
