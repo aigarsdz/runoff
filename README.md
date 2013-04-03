@@ -34,7 +34,7 @@ If you're confused, you can get some help.
 
 Things to do in the future versions:
 
-- Change the timestamp format (include time).
+- Parse body_xml to filter XML tags and character entities.
 - Append only new messages to the previously genetrated files instead of appending everything or create different versions for the files.
 - Add some colors.
 
