@@ -13,41 +13,6 @@ describe Runoff::Composition do
     @composition.must_respond_to :exported_filenames
   end
 
-  it "must remove all starting and ending dashes from a string" do
-    string = "---example--"
-    valid_name = @composition.send :trim_dashes, string
-
-    valid_name.must_equal 'example'
-  end
-
-  it "must return a valid and readable name from a raw chatname" do
-    raw_chatname = '#something/$else;521357125362'
-    chatname = @composition.send :parse_chatname, raw_chatname
-
-    chatname.must_equal 'something-else'
-  end
-
-  it "must return a valid and readable name from broken chatname records" do
-    raw_chatname = '#something/$521357125362'
-    chatname = @composition.send :parse_chatname, raw_chatname
-
-    chatname.must_equal 'something'
-  end
-
-  it "must return a chatname without the extra symbols" do
-    raw_chatname = '#something/$else;521357125362'
-    chatname = @composition.send :partly_parse_chatname, raw_chatname
-
-    chatname.must_equal '#something/$else;'
-  end
-
-  it "must return a chatname without the extra symbols for broken chatname records" do
-    raw_chatname = '#something/$521357125362'
-    chatname = @composition.send :partly_parse_chatname, raw_chatname
-
-    chatname.must_equal '#something/$'
-  end
-
   it "must return parsed chatnames together with partly parsed chatnames" do
     chatnames, raw_chatnames = @composition.get_chatnames
 
@@ -55,63 +20,37 @@ describe Runoff::Composition do
     raw_chatnames.must_equal ['#something/$more;', '#something/$else;']
   end
 
-  describe "#save_to_file" do
-    before do
-      @composition = Runoff::Composition.new 'test/test_db.sqlite'
-      @incorrect_chat_record = {
-        chatname: '#something/$;521357125362',
-        timestamp: 1362864487,
-        from_dispname: 'Aidzis',
-        body_xml: ''
-      }
-      @chat_record = {
-        chatname: '#something/$more;521357125362',
-        timestamp: 1362864487,
-        from_dispname: 'Aidzis',
-        body_xml: ''
-      }
-    end
-
-    after { FileUtils.rm_rf 'test/tmp/.' }
-
-    it "must write chat content to file" do
-      @incorrect_chat_record[:chatname] = '#something/$else;521357125362'
-
-      @composition.send :save_to_file, @chat_record, 'test/tmp'
-      @composition.send :save_to_file, @incorrect_chat_record, 'test/tmp'
-      @composition.exported_filenames.count.must_equal 2
-    end
-
-    it "must append to a file if the filename already exists" do
-      @incorrect_chat_record[:chatname] = '#something/$else;521357125362'
-      @additional_chat_record = @chat_record
-
-      @composition.send :save_to_file, @chat_record, 'test/tmp'
-      @composition.send :save_to_file, @incorrect_chat_record, 'test/tmp'
-      @composition.send :save_to_file, @additional_chat_record, 'test/tmp'
-      @composition.exported_filenames.count.must_equal 2
-    end
+  it "must have a save_to_file method" do
+    @composition.must_respond_to :save_to_file
   end
 
-  describe "#export" do
-    after { FileUtils.rm_rf 'test/tmp/.' }
+  it "must return a count of the exported filenames" do
+    file_count = @composition.send(
+      :run_export,
+      [{
+        chatname: '#test/$one;7687623',
+        timestamp: 123123213,
+        from_dispname: 'Aidzis',
+        body_xml: ''
+      }],
+      'test/tmp'
+    )
 
-    it "must return a count of the exported filenames" do
-      composition = Runoff::Composition.new 'test/test_db.sqlite'
-      file_count = composition.export 'test/tmp'
-
-      file_count.must_equal 2
-    end
+    file_count.must_equal 1
+    FileUtils.rm_rf 'test/tmp/.'
   end
 
-  describe "#export_chats" do
-    after { FileUtils.rm_rf 'test/tmp/.' }
+  it "must return a count of the exported filenames when called for all chats" do
+    file_count = @composition.export 'test/tmp'
 
-    it "must return a count of the exported filenames" do
-      composition = Runoff::Composition.new 'test/test_db.sqlite'
-      file_count = composition.export_chats ['#something/$more;', '#something/$else;'], 'test/tmp'
+    file_count.must_equal 2
+    FileUtils.rm_rf 'test/tmp/.'
+  end
 
-      file_count.must_equal 2
-    end
+  it "must return a count of the exported filenames when called for specific chats" do
+    file_count = @composition.export_chats ['#something/$more;', '#something/$else;'], 'test/tmp'
+
+    file_count.must_equal 2
+    FileUtils.rm_rf 'test/tmp/.'
   end
 end

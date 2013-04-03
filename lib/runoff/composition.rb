@@ -2,7 +2,6 @@ require 'sequel'
 require 'set'
 
 module Runoff
-
   # Public: Provides interaction with a Skype database file.
   #
   # Examples
@@ -10,6 +9,7 @@ module Runoff
   #   composition = Composition.new 'path/to/the/main.db'
   #   exported_files_count = composition.export 'export/folder'
   class Composition
+    include FileWriter
 
     # Public: Returns a Set object of all the names of the exported files.
     attr_reader :exported_filenames
@@ -35,16 +35,14 @@ module Runoff
     #
     # Examples
     #
-    #   export '~/skype_backup'
+    #   export '/home/username/skype_backup'
     #   # => 8
     #
     # Returns the count of the exported files.
     def export(destination_path)
       chat_records = @messages.select(:chatname, :timestamp, :from_dispname, :body_xml)
 
-      chat_records.each { |record| save_to_file record, destination_path }
-
-      @exported_filenames.count
+      run_export chat_records, destination_path
     end
 
     # Public: Gets parsed chatnames together with partly parsed chatnames.
@@ -78,86 +76,29 @@ module Runoff
       pattern_chatnames = chatnames.map { |name| "#{name}%" }
       chat_records = @messages.where(Sequel.like(:chatname, *pattern_chatnames))
 
-      chat_records.each { |record| save_to_file record, destination_path }
-
-      @exported_filenames.count
+      run_export chat_records, destination_path
     end
 
     private
 
-    # Internal: Saves a single chat message to a file.
+    # Internal: Performs the export process.
     #
-    # chat_record - a Hash containing data about a single chat message.
-    # output_directory - A String with the path to the directory, wher the file will be saved.
+    # chat_records - Array of chat records read from database
     #
     # Examples
     #
-    #   save_to_file record, '~/skype_backup'
-    def save_to_file(chat_record, output_directory)
-      datetime = Time.at chat_record[:timestamp]
-      output_record = "[#{datetime.to_date}] #{chat_record[:from_dispname]}: #{chat_record[:body_xml]}"
-      filename = "#{output_directory}/#{parse_chatname chat_record[:chatname]}.txt"
-
-      File.open(filename, 'a') do |file|
-        file.puts output_record
+    #   run_export [{chatname: '#sadsad/$kjhkjh;9878977', 123123213, 'Aidzis', ''}]
+    #   # => 1
+    #
+    # Returns the count of the exported files.
+    def run_export(chat_records, destination_path)
+      chat_records.each do |record|
+        if filename = save_to_file(record, destination_path)
+          @exported_filenames << filename
+        end
       end
 
-      @exported_filenames << filename
-    rescue StandardError
-      puts 'An error occured while parsing a chatname'
-    end
-
-    # Internal: Converts chatname from database to a valid file name.
-    #
-    # raw_chatname - A String with a chatname read from the database.
-    #
-    # Examples
-    #
-    #   parse_chatname '#someone/$someone_else;521357125362'
-    #   # => someone-someone_else.txt
-    #
-    # Returns a String with a valid file name.
-    def parse_chatname(raw_chatname)
-      match = raw_chatname.match(/#(.+)\/\$(.+);|#(.+)\/\$/)
-      first_part, second_part, third_part = match.captures
-      chatname = "#{first_part}-#{second_part}-#{third_part}"
-
-      trim_dashes chatname
-    end
-
-    # Internal: Removes extra characters from the end of a chatname.
-    #
-    # raw_chatname - A String with a chatname read from the database
-    #
-    # Examples
-    #
-    #   partly_parse_chatname '#someone/$someone_else;521357125362'
-    #   # => #someone/$someone_else;
-    #
-    # Returns a String with a chatname without extra characters at the end.
-    def partly_parse_chatname(raw_chatname)
-      match = raw_chatname.match(/(#.+\/\$.+;)|(#.+\/\$)/)
-      first_group, second_group = match.captures
-
-      first_group || second_group
-    end
-
-    # Internal: Removes unnecessary dashes from the begining and the end of the string.
-    #
-    # string - A String possibly containing dashes at the beggining or the end
-    #
-    # Examples
-    #
-    #   str = '--example-'
-    #   trim_dashes str
-    #   # => example
-    #
-    # Returns a string without leading and ending dashes.
-    def trim_dashes(string)
-      string.gsub! /^-+/, ''
-      string.gsub! /-+$/, ''
-
-      string
+      @exported_filenames.count
     end
   end
 end
