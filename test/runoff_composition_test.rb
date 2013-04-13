@@ -9,22 +9,22 @@ describe Runoff::Composition do
     ->{ composition = Runoff::Composition.new 'not_existing.db' }.must_raise IOError
   end
 
-  it "must have a getter method for exported filenames" do
+  it 'must have a getter method for exported filenames' do
     @composition.must_respond_to :exported_filenames
   end
 
-  it "must return parsed chatnames together with partly parsed chatnames" do
+  it 'must return parsed chatnames together with partly parsed chatnames' do
     chatnames, raw_chatnames = @composition.get_chatnames
 
     chatnames.must_equal ['something-more', 'something-else']
     raw_chatnames.must_equal ['#something/$more;', '#something/$else;']
   end
 
-  it "must have a save_to_file method" do
+  it 'must have a save_to_file method' do
     @composition.must_respond_to :save_to_file
   end
 
-  it "must return a count of the exported filenames" do
+  it 'must return a count of the exported filenames' do
     file_count = @composition.send(
       :run_export,
       [{
@@ -40,14 +40,14 @@ describe Runoff::Composition do
     FileUtils.rm_rf 'test/tmp/.'
   end
 
-  it "must return a count of the exported filenames when called for all chats" do
+  it 'must return a count of the exported filenames when called for all chats' do
     file_count = @composition.export 'test/tmp'
 
     file_count.must_equal 2
     FileUtils.rm_rf 'test/tmp/.'
   end
 
-  it "must return a count of the exported filenames when called for specific chats" do
+  it 'must return a count of the exported filenames when called for specific chats' do
     file_count = @composition.export_chats ['#something/$more;', '#something/$else;'], 'test/tmp'
 
     file_count.must_equal 2

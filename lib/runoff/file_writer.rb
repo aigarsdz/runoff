@@ -24,7 +24,7 @@ module Runoff
       puts 'An error occured while parsing a chatname'
     end
 
-    # Internal: Converts chatname from database to a valid file name.
+    # Public: Converts chatname from database to a valid file name.
     #
     # raw_chatname - A String with a chatname read from the database.
     #
@@ -42,7 +42,7 @@ module Runoff
       trim_dashes chatname
     end
 
-    # Internal: Removes extra characters from the end of a chatname.
+    # Public: Removes extra characters from the end of a chatname.
     #
     # raw_chatname - A String with a chatname read from the database
     #
@@ -59,7 +59,7 @@ module Runoff
       first_group || second_group
     end
 
-    # Internal: Removes unnecessary dashes from the begining and the end of the string.
+    # Public: Removes unnecessary dashes from the begining and the end of the string.
     #
     # string - A String possibly containing dashes at the beggining or the end
     #
@@ -71,13 +71,13 @@ module Runoff
     #
     # Returns a string without leading and ending dashes.
     def trim_dashes(string)
-      clean_string = string.gsub /^-+/, ''
-      clean_string.gsub /-+$/, ''
+      clean_string = string.gsub(/^-+/, '')
+      clean_string.gsub(/-+$/, '')
     end
 
     # Public: Remove Skype emotion tags.
     #
-    # text - String containing XML data
+    # text - String containing XML data
     #
     # Examples
     #
@@ -86,8 +86,8 @@ module Runoff
     #
     # Returns the duplicated String.
     def parse_body_xml(text)
-      clean_text = text.gsub /<ss type=".+">/, ''
-      clean_text.gsub /<\/ss>/, ''
+      clean_text = text.gsub(/<ss type=".+">/, '')
+      clean_text.gsub(/<\/ss>/, '')
     end
   end
 end

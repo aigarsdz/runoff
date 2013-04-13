@@ -20,9 +20,7 @@ module Runoff
     #
     # Raises IOError if the file cannot be found
     def initialize(main_db_file_path)
-      unless File.exists? main_db_file_path
-        raise IOError, "File doesn't exist"
-      end
+      raise IOError, "File doesn't exist" unless File.exists? main_db_file_path
 
       skype_database = Sequel.connect "sqlite://#{main_db_file_path}"
       @messages = skype_database.from :Messages
@@ -50,7 +48,8 @@ module Runoff
     # Examples
     #
     #   get_chatnames
-    #   # => [['something-more', 'somethindg-else'], ['#something/$more;6521032', '#something/$else;8971263']]
+    #   # => [['something-more', 'somethindg-else'],
+    #         ['#something/$more;6521032', '#something/$else;8971263']]
     #
     # Returns two Array objects containing parsed chatnames and partly parsed chatnames.
     def get_chatnames
@@ -83,7 +82,7 @@ module Runoff
 
     # Internal: Performs the export process.
     #
-    # chat_records - Array of chat records read from database
+    # chat_records - Array of chat records read from database
     #
     # Examples
     #

@@ -4,7 +4,7 @@ require 'runoff'
 
 describe Runoff::Location do
   describe '.default_skype_data_location' do
-    it "must return a default path depending on the operating system" do
+    it 'must return a default path depending on the operating system' do
       path = Runoff::Location.default_skype_data_location 'aidzis_skype'
 
       if RbConfig::CONFIG['host_os'] =~ /mingw/
@@ -17,8 +17,8 @@ describe Runoff::Location do
     end
   end
 
-  describe ".home_path" do
-    it "must return a path to the user home directory depending on the operating system" do
+  describe '.home_path' do
+    it 'must return a path to the user home directory depending on the operating system' do
       path = Runoff::Location.home_path
 
       if RbConfig::CONFIG['host_os'] =~ /mingw/

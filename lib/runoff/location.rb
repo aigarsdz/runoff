@@ -28,8 +28,8 @@ module Runoff
       if RbConfig::CONFIG['host_os'] =~ /mingw/
         location = "#{ENV['APPDATA']}\\Skype\\#{skype_username}\\main.db"
 
-        location.gsub! /\\/, '/'
-        location.gsub /^[a-zA-Z]:/, ''
+        location.gsub!(/\\/, '/')
+        location.gsub(/^[a-zA-Z]:/, '')
       elsif RbConfig::CONFIG['host_os'] =~ /linux/
         "#{ENV['HOME']}/.Skype/#{skype_username}/main.db"
       else

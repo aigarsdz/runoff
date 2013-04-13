@@ -68,7 +68,7 @@ module Runoff
       chatnames, raw_chatnames = composition.get_chatnames
 
       list_chatnames chatnames
-      indecies = ask "Which chats do you want to export? (Enter indecies) "
+      indecies = ask 'Which chats do you want to export? (Enter indecies) '
       indecies = indecies.split.map { |index| index.to_i }
       selected_chatnames = []
 
@@ -126,7 +126,7 @@ module Runoff
     #   # => Finished: 4 files were exported
     def print_result(count)
       if count == 1
-        puts "Finished: 1 file was exported"
+        puts 'Finished: 1 file was exported'
       elsif count > 1
         puts "Finished: #{count} files were exported"
       end
