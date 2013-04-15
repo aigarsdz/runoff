@@ -1,3 +1,5 @@
+require 'zip/zip'
+
 module Runoff
   # Public: Methods used for writing to files.
   module FileWriter
@@ -15,13 +17,15 @@ module Runoff
       output_record << "#{chat_record[:from_dispname]}: #{parse_body_xml chat_record[:body_xml]}"
       filename = "#{output_directory}/#{parse_chatname chat_record[:chatname]}.txt"
 
+      Dir.mkdir(output_directory) unless File.exists?(output_directory)
+
       File.open(filename, 'a') do |file|
         file.puts output_record
       end
 
       filename
     rescue StandardError
-      puts 'An error occured while parsing a chatname'
+      puts 'An error occured while saving a file'
     end
 
     # Internal: Converts chatname from database to a valid file name.
@@ -77,7 +81,7 @@ module Runoff
 
     # Public: Remove Skype emotion tags.
     #
-    # text - String containing XML data
+    # text - String containing XML data
     #
     # Examples
     #
@@ -88,6 +92,20 @@ module Runoff
     def parse_body_xml(text)
       clean_text = text.gsub /<ss type=".+">/, ''
       clean_text.gsub /<\/ss>/, ''
+    end
+
+    def archive(output_directory)
+      timestamp = Time.now.strftime "%Y%m%d%H%M%S"
+
+      Zip::ZipFile.open "#{output_directory}_#{timestamp}.zip", Zip::ZipFile::CREATE do |zipfile|
+        Dir.entries(output_directory).each do |file|
+          if File.file?("#{output_directory}/#{file}")
+            zipfile.add file, "#{output_directory}/#{file}"
+          end
+        end
+      end
+
+      FileUtils.rm_rf output_directory
     end
   end
 end

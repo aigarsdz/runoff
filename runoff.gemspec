@@ -22,4 +22,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'thor'
   gem.add_dependency 'sqlite3'
   gem.add_dependency 'sequel'
+  gem.add_dependency 'rubyzip'
 end

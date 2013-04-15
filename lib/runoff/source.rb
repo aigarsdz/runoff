@@ -20,6 +20,8 @@ module Runoff
 
     method_option :from, aliases: '-f', desc: 'Specify the location of the main.db file'
     method_option :to, aliases: '-t', desc: 'Specify where to put export files'
+    method_option :archive, aliases: '-a', type: :boolean, default: true,
+                  desc: 'Specify whether to save files in a Zip archive'
 
     # Public: Exports all chat history from the Skype database.
     #
@@ -35,6 +37,7 @@ module Runoff
       destination = get_destination
 
       print_result composition.export(destination)
+      try_to_archive composition, destination
 
     rescue IOError => e
       puts e
@@ -52,6 +55,8 @@ module Runoff
 
     method_option :from, aliases: '-f', desc: 'Specify the location of the main.db file'
     method_option :to, aliases: '-t', desc: 'Specify where to put export files'
+    method_option :archive, aliases: '-a', type: :boolean, default: true,
+                  desc: 'Specify whether to save files in a Zip archive'
 
     # Public: Exports specified chats from the Skype database.
     #
@@ -74,6 +79,7 @@ module Runoff
 
       indecies.each { |index| selected_chatnames << raw_chatnames[index] }
       print_result composition.export_chats(selected_chatnames, destination)
+      try_to_archive composition, destination
 
     rescue IOError => e
       puts e
@@ -144,6 +150,14 @@ module Runoff
     def list_chatnames(chatnames)
       chatnames.each_with_index { |n, i| puts "[#{i}] #{n}" }
       puts
+    end
+
+    def try_to_archive(composition, destination)
+      if options[:archive]
+        composition.archive destination
+      end
+    rescue StandardError
+      puts 'Faild to create an archive'
     end
   end
 end

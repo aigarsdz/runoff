@@ -83,7 +83,7 @@ module Runoff
 
     # Internal: Performs the export process.
     #
-    # chat_records - Array of chat records read from database
+    # chat_records - Array of chat records read from database
     #
     # Examples
     #
