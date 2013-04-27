@@ -6,15 +6,15 @@ describe Runoff::FileWriter do
   before do
     @incorrect_chat_record = {
       chatname: '#something/$;521357125362',
-      timestamp: 1362864487,
+      timestamp: 1366280218,
       from_dispname: 'Aidzis',
       body_xml: ''
     }
     @chat_record = {
       chatname: '#something/$more;521357125362',
-      timestamp: 1362864487,
+      timestamp: 1366280218,
       from_dispname: 'Aidzis',
-      body_xml: ''
+      body_xml: 'This is a text.'
     }
 
     class ClassWithFileWriterMixin
@@ -66,8 +66,19 @@ describe Runoff::FileWriter do
     chatname.must_equal '#something/$'
   end
 
-  describe '#save_to_file' do
-    after { FileUtils.rm_rf 'test/tmp/.' }
+  it 'must build a chat entry from a database record' do
+    entry = @test_object.build_entry @chat_record
+
+    entry.must_equal '[2013-04-18 13:16:58] Aidzis: This is a text.'
+  end
+
+  describe "#save_to_file" do
+    after do
+      FileUtils.rm_rf 'test/tmp/.'
+      Dir.glob('test/*.zip').each do |archive|
+        File.delete archive
+      end
+    end
 
     it 'must write chat content to file' do
       @test_object.save_to_file @chat_record, 'test/tmp'
@@ -82,6 +93,23 @@ describe Runoff::FileWriter do
       @test_object.save_to_file @incorrect_chat_record, 'test/tmp'
       @test_object.save_to_file @additional_chat_record, 'test/tmp'
       Dir['test/tmp/**/*'].length.must_equal 2
+    end
+  end
+
+  it 'must create a Zip file of the file output directory' do
+    output_directory = 'test/tmp'
+    files = %w[first.txt second.txt]
+
+    Dir.mkdir(output_directory) unless File.exists?(output_directory)
+    files.each do |filename|
+      File.new "#{output_directory}/#{filename}", 'w'
+    end
+
+    @test_object.archive output_directory
+    Dir["test/*.zip"].length.must_equal 1
+
+    Dir.glob('test/*.zip').each do |archive|
+      File.delete archive
     end
   end
 end
