@@ -12,20 +12,34 @@ module Runoff
     #
     #   save_to_file record, '/home/username/skype_backup'
     def save_to_file(chat_record, output_directory)
-      datetime = Time.at chat_record[:timestamp]
-      output_record = "[#{datetime.strftime "%Y-%m-%d %H:%M:%S"}] "
-      output_record << "#{chat_record[:from_dispname]}: #{parse_body_xml chat_record[:body_xml]}"
       filename = "#{output_directory}/#{parse_chatname chat_record[:chatname]}.txt"
 
       Dir.mkdir(output_directory) unless File.exists?(output_directory)
-
       File.open(filename, 'a') do |file|
-        file.puts output_record
+        file.puts build_entry(chat_record)
       end
 
       filename
     rescue StandardError
       puts 'An error occured while saving a file'
+    end
+
+    # Public: Creates a String with one entry from the chat.
+    #
+    # chat_record - a Hash containing data about a single chat message.
+    #
+    # Examples
+    #
+    #   build_entry { timestamp: 213213232, from_dispname: 'aidzis', body_xml: 'This is text.' }
+    #   # => [2013-04-13 14:23:57] aidzis: This is text.
+    #
+    # Returns a String with a chat entry.
+    def build_entry(chat_record)
+      datetime = Time.at chat_record[:timestamp]
+      output_record = "[#{datetime.strftime "%Y-%m-%d %H:%M:%S"}] "
+      output_record << "#{chat_record[:from_dispname]}: #{parse_body_xml chat_record[:body_xml]}"
+
+      output_record
     end
 
     # Internal: Converts chatname from database to a valid file name.
@@ -94,10 +108,17 @@ module Runoff
       clean_text.gsub /<\/ss>/, ''
     end
 
+    # Public: Compresses all the exported files into a Zip archive.
+    #
+    # output_directory - A String with the path to the directory, wher the file will be saved.
+    #
+    # Examples
+    #
+    #   archive '/home/username/skype-backup'
     def archive(output_directory)
       timestamp = Time.now.strftime "%Y%m%d%H%M%S"
 
-      Zip::ZipFile.open "#{output_directory}_#{timestamp}.zip", Zip::ZipFile::CREATE do |zipfile|
+      Zip::ZipFile.open "#{output_directory}-#{timestamp}.zip", Zip::ZipFile::CREATE do |zipfile|
         Dir.entries(output_directory).each do |file|
           if File.file?("#{output_directory}/#{file}")
             zipfile.add file, "#{output_directory}/#{file}"

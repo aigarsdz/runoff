@@ -119,7 +119,7 @@ module Runoff
     #
     # Returns a String containing a path to the destination directory.
     def get_destination
-      options[:to] || Location.home_path
+      options[:to] || "#{Location.home_path}/skype-backup"
     end
 
     # Internal: Informs the user that the application has finished running.
@@ -152,6 +152,14 @@ module Runoff
       puts
     end
 
+    # Internal: performs archiving if an --archive option is provided
+    #
+    # composition - A Compositon object
+    # destination - A String containing a path to the export directory.
+    #
+    # Examples
+    #
+    #   try_to_archive composition, '/home/username/skype-backup'
     def try_to_archive(composition, destination)
       if options[:archive]
         composition.archive destination
