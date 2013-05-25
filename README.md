@@ -13,18 +13,18 @@ SDBR is written in C# using WPF, therefore it runs only on Windows. Moreover, it
 
 To export all the chat history.
 
-    # save all the files in your home directory
+    # save a Zip archive in your home directory
     runoff all skype_username
 
-    # save the files in a specific directory
-    runoff all skype_username -t ~/skype_backup
+    # save a Zip archive in a specific directory
+    runoff all skype_username -t ~/backups
 
     # export database that isn't located in the default path
-    runoff all -f ~/main.db -t ~/skype_backup
+    runoff all -f ~/main.db -t ~/backups
 
 To export specific chats.
 
-    runoff chat skype_username -t ~/skype_backup
+    runoff chat skype_username
 
 If you don't want to put files into an archive, use `--no-archive` option
 
@@ -42,4 +42,4 @@ Things to do in the future versions:
 - Append only new messages to the previously genetrated files instead of appending everything or create different versions for the files when using `--no-archive option`.
 - Add some colors.
 
-If you have something to say about this gem or anything else, you can find me on Twitter as [@AigarsDz](http://twitter.com/AigarsDz "@AigarsDz").
+If you have something to say about this gem or anything else, you can find me on Twitter as [@aigarsdz](http://twitter.com/aigarsdz "@aigarsdz").
