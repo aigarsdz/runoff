@@ -2,6 +2,33 @@
 
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
+require 'commander/import'
 require 'runoff'
 
-Runoff::Source.start ARGV
+program :name, 'runoff'
+program :version, Runoff::VERSION
+program :description, 'runoff is a simple application to create Skype backups'
+
+default_command :help
+
+global_option '-f', '--from FILE', 'Location of the main.db file'
+global_option '-d', '--destination DIR', 'Location for the exoprted files'
+global_option '-a', '--archive', 'Save files in a Zip archive (defaults to true)'
+
+command :all do |command|
+  command.syntax = 'runoff all [SKYPE_USERNAME] [OPTIONS]'
+  command.description = 'Export all chat history'
+
+  command.action do |args, options|
+    Runoff::Commands::All.process args, options.__hash__
+  end
+end
+
+command :chat do |command|
+  command.syntax = 'runoff chat [SKYPE_USERNAME] [OPTIONS]'
+  command.description = 'Export pecified chats history'
+
+  command.action do |args, options|
+    Runoff::Commands::Chat.process args, options.__hash__
+  end
+end
