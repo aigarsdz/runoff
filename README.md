@@ -17,10 +17,10 @@ To export all the chat history.
     runoff all skype_username
 
     # save a Zip archive in a specific directory
-    runoff all skype_username -t ~/backups
+    runoff all skype_username -d ~/backups
 
     # export database that isn't located in the default path
-    runoff all -f ~/main.db -t ~/backups
+    runoff all -f ~/main.db -d ~/backups
 
 To export specific chats.
 
@@ -28,18 +28,15 @@ To export specific chats.
 
 If you don't want to put files into an archive, use `--no-archive` option
 
-    runoff all skype_username --no-archive
-
-If you're confused, you can get some help.
-
-    runoff help all
+    runoff all skype_username -a false
 
 ## What else?
 
 Things to do in the future versions:
 
+- Refactore tests (move from MiniTest::Spec to MiniTest::Unit).
 - Parse body_xml to filter XML tags and character entities.
-- Append only new messages to the previously genetrated files instead of appending everything or create different versions for the files when using `--no-archive option`.
+- Append only new messages to the previously genetrated files instead of appending everything or create different versions for the files when using `-a false` option.
 - Add some colors.
 
 If you have something to say about this gem or anything else, you can find me on Twitter as [@aigarsdz](http://twitter.com/aigarsdz "@aigarsdz").
