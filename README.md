@@ -34,7 +34,7 @@ If you don't want to put files into an archive, use `--no-archive` option
 
 Things to do in the future versions:
 
-- Refactore tests (move from MiniTest::Spec to MiniTest::Unit).
+- Refactor tests (move from MiniTest::Spec to MiniTest::Unit).
 - Parse body_xml to filter XML tags and character entities.
 - Append only new messages to the previously genetrated files instead of appending everything or create different versions for the files when using `-a false` option.
 - Add some colors.
