@@ -16,16 +16,4 @@ describe Runoff::Location do
       end
     end
   end
-
-  describe '.home_path' do
-    it 'must return a path to the user home directory depending on the operating system' do
-      path = Runoff::Location.home_path
-
-      if RbConfig::CONFIG['host_os'] =~ /mingw/
-        path.must_match /[A-Z]:\\Users\\[a-zA-Z0-9]+/
-      else
-        path.must_match /\/home\/[a-zA-Z0-9]+/
-      end
-    end
-  end
 end

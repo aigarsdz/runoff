@@ -1,6 +1,7 @@
 require 'minitest/spec'
 require 'minitest/autorun'
 require 'runoff'
+require 'fileutils'
 
 describe Runoff::Composition do
   before { @composition = Runoff::Composition.new 'test/test_db.sqlite' }
@@ -20,10 +21,6 @@ describe Runoff::Composition do
     raw_chatnames.must_equal ['#something/$more;', '#something/$else;']
   end
 
-  it 'must have a save_to_file method' do
-    @composition.must_respond_to :save_to_file
-  end
-
   it 'must return a count of the exported filenames' do
     file_count = @composition.send(
       :run_export,
@@ -37,20 +34,20 @@ describe Runoff::Composition do
     )
 
     file_count.must_equal 1
-    FileUtils.rm_rf 'test/tmp/.'
+    FileUtils.rm_rf 'test/tmp'
   end
 
   it 'must return a count of the exported filenames when called for all chats' do
     file_count = @composition.export 'test/tmp'
 
     file_count.must_equal 2
-    FileUtils.rm_rf 'test/tmp/.'
+    FileUtils.rm_rf 'test/tmp'
   end
 
   it 'must return a count of the exported filenames when called for specific chats' do
     file_count = @composition.export_chats ['#something/$more;', '#something/$else;'], 'test/tmp'
 
     file_count.must_equal 2
-    FileUtils.rm_rf 'test/tmp/.'
+    FileUtils.rm_rf 'test/tmp'
   end
 end

@@ -9,25 +9,28 @@ module Runoff
   #   composition = Composition.new 'path/to/the/main.db'
   #   exported_files_count = composition.export 'export/folder'
   class Composition
-    include FileWriter
-
     # Public: Returns a Set object of all the names of the exported files.
     attr_reader :exported_filenames
 
     # Public: Initialize a Composition object.
     #
     # main_db_file_path - A String with the path to the Skype database file.
+    # skype_username - A String with Skype login.
     #
     # Raises IOError if the file cannot be found
-    def initialize(main_db_file_path)
+    def initialize(optional_file_path, skype_username = nil)
+      main_db_file_path = optional_file_path || Runoff::Location.default_skype_data_location(skype_username)
+
       raise IOError, "File doesn't exist" unless File.exists? main_db_file_path
 
       skype_database = Sequel.connect "sqlite://#{main_db_file_path}"
       @messages = skype_database.from :Messages
       @exported_filenames = Set.new
+      @format = Runoff::SkypeDataFormat.new
+      @file_writer = Runoff::FileWriter.new @format
     end
 
-    # Public: Exports Skype chat history to text files.
+    # Public: Reads all chat records from database and runs the export process.
     #
     # destination_path - A String with folder path, where to put exported files.
     #
@@ -54,8 +57,8 @@ module Runoff
     # Returns two Array objects containing parsed chatnames and partly parsed chatnames.
     def get_chatnames
       chatnames = @messages.select(:chatname)
-      raw_chatnames = chatnames.map { |record| partly_parse_chatname record[:chatname] }.uniq
-      clean_chatnames = raw_chatnames.map { |chatname| parse_chatname chatname }
+      raw_chatnames = chatnames.map { |record| @format.partly_parse_chatname record[:chatname] }.uniq
+      clean_chatnames = raw_chatnames.map { |chatname| @format.parse_chatname chatname }
 
       return clean_chatnames, raw_chatnames
     end
@@ -79,7 +82,6 @@ module Runoff
     end
 
     private
-
     # Internal: Performs the export process.
     #
     # chat_records - Array of chat records read from database
@@ -92,7 +94,7 @@ module Runoff
     # Returns the count of the exported files.
     def run_export(chat_records, destination_path)
       chat_records.each do |record|
-        if filename = save_to_file(record, destination_path)
+        if filename = @file_writer.save_to_file(record, destination_path)
           @exported_filenames << filename
         end
       end

@@ -36,26 +36,5 @@ module Runoff
         "#{ENV['HOME']}/Library/Application Support/Skype/#{skype_username}/main.db"
       end
     end
-
-    # Public: Clarifies the path to the user's home directory depending on the operating system
-    #
-    # Examples
-    #
-    #   On Linux:
-    #   home_path
-    #   # => /home/user
-    #
-    #   On Windows:
-    #   home_path
-    #   # => C:\Users\user
-    #
-    # Returns a String that contains the path to the user's home directory.
-    def self.home_path
-      if RbConfig::CONFIG['host_os'] =~ /mingw/
-        ENV['USERPROFILE']
-      else
-        ENV['HOME']
-      end
-    end
   end
 end
