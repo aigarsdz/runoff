@@ -1,9 +1,11 @@
-require 'minitest/spec'
 require 'minitest/autorun'
+require 'minitest/unit'
 require 'runoff'
 
-describe Runoff::Commands::Chat do
-  it 'must output an error message if no username or --from option is provided' do
-    ->{ Runoff::Commands::Chat.process []  }.must_output "You must specify a username or a --from option\n"
+class TestChat < MiniTest::Unit::TestCase
+  def test_must_output_an_error_message_if_no_username_or_from_option_is_procided
+    assert_output "You must specify a username or a --from option\n" do
+      Runoff::Commands::Chat.process []
+    end
   end
 end

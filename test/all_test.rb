@@ -1,25 +1,37 @@
-require 'minitest/spec'
 require 'minitest/autorun'
+require 'minitest/unit'
 require 'runoff'
+require 'fileutils'
 
-describe Runoff::Commands::All do
-  it 'must output an error message if no username or --from option is provided' do
-    ->{ Runoff::Commands::All.process []  }.must_output "You must specify a username or a --from option\n"
-  end
-
-  it 'must output result of the command' do
-    ->{ Runoff::Commands::All.process [], {
-      from: 'test/test_db.sqlite', destination: 'test/tmp' }
-    }.must_output "Finished: 2 files were exported\n"
-  end
-
-  it 'must put exported files into an archive' do
-    capture_io { Runoff::Commands::All.process [], { from: 'test/test_db.sqlite', destination: 'test/tmp' } }
-
-    Dir["test/*.zip"].length.must_equal 1
-
+class TestAll < MiniTest::Unit::TestCase
+  def teardown
     Dir.glob('test/*.zip').each do |archive|
       File.delete archive
     end
+
+    FileUtils.rm_rf 'test/tmp'
+  end
+
+  def test_must_output_an_error_message_if_no_username_or_from_option_is_provided
+    assert_output "You must specify a username or a --from option\n" do
+      Runoff::Commands::All.process []
+    end
+  end
+
+  def test_must_output_result_of_the_command
+    assert_output "Finished: 2 files were exported\n" do
+      Runoff::Commands::All.process [], {
+        from: 'test/test_db.sqlite',
+        destination: 'test/tmp'
+      }
+    end
+  end
+
+  def test_must_put_exported_files_into_an_archive
+    capture_io do
+      Runoff::Commands::All.process [], { from: 'test/test_db.sqlite', destination: 'test/tmp' }
+    end
+
+    assert_equal 1, Dir["test/*.zip"].length, "test directory must contain 1 Zip file"
   end
 end

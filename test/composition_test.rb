@@ -1,53 +1,58 @@
-require 'minitest/spec'
 require 'minitest/autorun'
+require 'minitest/unit'
 require 'runoff'
 require 'fileutils'
 
-describe Runoff::Composition do
-  before { @composition = Runoff::Composition.new 'test/test_db.sqlite' }
-
-  it "must raise an IOError if the file that is passed to the constructor doesn't exist" do
-    ->{ composition = Runoff::Composition.new 'not_existing.db' }.must_raise IOError
+class TestComposition < MiniTest::Unit::TestCase
+  def setup
+    @composition = Runoff::Composition.new 'test/test_db.sqlite'
   end
 
-  it 'must have a getter method for exported filenames' do
-    @composition.must_respond_to :exported_filenames
+  def teardown
+    FileUtils.rm_rf 'test/tmp'
   end
 
-  it 'must return parsed chatnames together with partly parsed chatnames' do
+  def test_must_raise_an_IOError_if_the_file_that_is_passed_to_the_constructor_does_not_exist
+    assert_raises IOError do
+      composition = Runoff::Composition.new 'not_existing.db'
+    end
+  end
+
+  def test_must_respond_to_exported_filenames_method
+    assert_respond_to @composition, :exported_filenames
+  end
+
+  def test_must_return_parsed_chatnames_together_with_partly_parsed_chatnames
     chatnames, raw_chatnames = @composition.get_chatnames
 
-    chatnames.must_equal ['something-more', 'something-else']
-    raw_chatnames.must_equal ['#something/$more;', '#something/$else;']
+    assert_equal ['something-more', 'something-else'], chatnames
+    assert_equal ['#something/$more;', '#something/$else;'], raw_chatnames
   end
 
-  it 'must return a count of the exported filenames' do
+  def test_must_return_a_count_of_the_exported_filenames
     file_count = @composition.send(
       :run_export,
       [{
-        chatname: '#test/$one;7687623',
+        chatname: '#john/$elis;7687623',
         timestamp: 123123213,
-        from_dispname: 'Aidzis',
+        from_dispname: 'John',
         body_xml: ''
       }],
       'test/tmp'
     )
 
-    file_count.must_equal 1
-    FileUtils.rm_rf 'test/tmp'
+    assert_equal 1, file_count
   end
 
-  it 'must return a count of the exported filenames when called for all chats' do
+  def test_must_return_a_count_of_the_exported_filenames_when_called_for_all_chats
     file_count = @composition.export 'test/tmp'
 
-    file_count.must_equal 2
-    FileUtils.rm_rf 'test/tmp'
+    assert_equal 2, file_count
   end
 
-  it 'must return a count of the exported filenames when called for specific chats' do
+  def test_must_return_a_count_of_the_exported_filenames_when_called_for_specific_chats
     file_count = @composition.export_chats ['#something/$more;', '#something/$else;'], 'test/tmp'
 
-    file_count.must_equal 2
-    FileUtils.rm_rf 'test/tmp'
+    assert_equal 2, file_count
   end
 end
