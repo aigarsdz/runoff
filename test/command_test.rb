@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require 'minitest/unit'
 require 'runoff'
 
-class TestCommand < MiniTest::Unit::TestCase
+class TestCommand < MiniTest::Test
   def test_must_create_a_composition_object_based_on_a_specified_path_to_database_file
     assert_instance_of Runoff::Composition, Runoff::Commands::Command.send(:get_composition, nil, 'test/test_db.sqlite')
   end

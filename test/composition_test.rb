@@ -3,7 +3,7 @@ require 'minitest/unit'
 require 'runoff'
 require 'fileutils'
 
-class TestComposition < MiniTest::Unit::TestCase
+class TestComposition < MiniTest::Test
   def setup
     @composition = Runoff::Composition.new 'test/test_db.sqlite'
   end

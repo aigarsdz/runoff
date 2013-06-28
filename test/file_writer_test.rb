@@ -3,7 +3,7 @@ require 'minitest/unit'
 require 'runoff'
 require 'fileutils'
 
-class TestFileWriter < MiniTest::Unit::TestCase
+class TestFileWriter < MiniTest::Test
   def setup
     @incorrect_chat_record = {
       chatname: '#john/$;521357125362',
@@ -57,7 +57,8 @@ class TestFileWriter < MiniTest::Unit::TestCase
     Dir.mkdir(output_directory) unless File.exists?(output_directory)
 
     files.each do |filename|
-      File.new "#{output_directory}/#{filename}", 'w'
+      file = File.new "#{output_directory}/#{filename}", 'w'
+      file.close
     end
 
     Runoff::FileWriter.archive output_directory

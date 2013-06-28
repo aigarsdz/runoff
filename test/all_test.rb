@@ -3,7 +3,7 @@ require 'minitest/unit'
 require 'runoff'
 require 'fileutils'
 
-class TestAll < MiniTest::Unit::TestCase
+class TestAll < MiniTest::Test
   def teardown
     Dir.glob('test/*.zip').each do |archive|
       File.delete archive

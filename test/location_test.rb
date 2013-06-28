@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require 'minitest/unit'
 require 'runoff'
 
-class TestLocation < MiniTest::Unit::TestCase
+class TestLocation < MiniTest::Test
   def test_must_return_a_default_path_depending_on_the_operating_system
     path = Runoff::Location.default_skype_data_location 'aidzis_skype'
 

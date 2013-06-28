@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require 'minitest/unit'
 require 'runoff'
 
-class TestSkypeDataFormat < MiniTest::Unit::TestCase
+class TestSkypeDataFormat < MiniTest::Test
   def setup
     @format = Runoff::SkypeDataFormat.new
   end
