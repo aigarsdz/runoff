@@ -56,14 +56,13 @@ module Runoff
     # Returns a String that contains the path to the Skype database file.
     def self.get_default_skype_data_location_on_windows_8(skype_username)
       location = "#{ENV['HOME']}/AppData/Local/Packages"
+      skype_folder = Dir["#{location}/Microsoft.SkypeApp*"].first
 
-      Dir["#{location}/*"].each do |item|
-        if item =~ /Microsoft\.SkypeApp/
-          location = "#{item}/LocalState/#{skype_username}/main.db"
-        end
+      if skype_folder
+        "#{skype_folder}/LocalState/#{skype_username}/main.db"
+      else
+        location
       end
-
-      location
     end
   end
 end
