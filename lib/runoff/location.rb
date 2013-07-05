@@ -25,16 +25,14 @@ module Runoff
     #
     # Returns a String that contains the path to the Skype database file.
     def self.default_skype_data_location(skype_username)
-      if RbConfig::CONFIG['host_os'] =~ /mingw/
-        location = "#{ENV['APPDATA']}\\Skype\\#{skype_username}\\main.db"
-
-        unless File.exist?("#{ENV['APPDATA']}\\Skype")
-          location = self.get_default_skype_data_location_on_windows_8 skype_username
+      case RbConfig::CONFIG['host_os']
+      when /mingw/
+        if File.exist?("#{ENV['APPDATA']}\\Skype")
+          format_windows_path "#{ENV['APPDATA']}\\Skype\\#{skype_username}\\main.db"
+        else
+          format_windows_path self.get_default_skype_data_location_on_windows_8(skype_username)
         end
-
-        location.gsub!(/\\/, '/')
-        location.gsub(/^[a-zA-Z]:/, '')
-      elsif RbConfig::CONFIG['host_os'] =~ /linux/
+      when /linux/
         "#{ENV['HOME']}/.Skype/#{skype_username}/main.db"
       else
         "#{ENV['HOME']}/Library/Application Support/Skype/#{skype_username}/main.db"
@@ -43,7 +41,22 @@ module Runoff
 
     private
 
-    # Public: Composes the default Skype database location for the Windows 8 operating system.
+    # Internal: Replaces backslashes with forward slashes and removes drive letter.
+    #
+    # path - String containing a directory path.
+    #
+    # Examples
+    #
+    #   format_windows_path 'C:\Users\username\AppData\Roaming\Skype\skype_username\main.db'
+    #   # => /Users/username/AppData/ROaming/Skype/skype_username/main.db
+    #
+    # Returns a String with modified directory path.
+    def self.format_windows_path(path)
+      path = path.gsub(/\\/, '/')
+      path.gsub(/^[a-zA-Z]:/, '')
+    end
+
+    # Internal: Composes the default Skype database location for the Windows 8 operating system.
     #
     # skype_username - A String that contains a username of the Skype account,
     #                  which database we want to access.
@@ -58,11 +71,9 @@ module Runoff
       location = "#{ENV['HOME']}/AppData/Local/Packages"
       skype_folder = Dir["#{location}/Microsoft.SkypeApp*"].first
 
-      if skype_folder
-        "#{skype_folder}/LocalState/#{skype_username}/main.db"
-      else
-        location
-      end
+      raise IOError.new "The default Skype directory doesn't exist." unless skype_folder
+
+      "#{skype_folder}/LocalState/#{skype_username}/main.db"
     end
   end
 end
