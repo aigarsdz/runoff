@@ -36,6 +36,5 @@ Things to do in the future versions:
 
 - Parse body_xml to filter XML tags and character entities.
 - Append only new messages to the previously genetrated files instead of appending everything or create different versions for the files when using `-a false` option.
-- Add some colors.
 
 If you have something to say about this gem or anything else, you can find me on Twitter as [@aigarsdz](http://twitter.com/aigarsdz "@aigarsdz").
