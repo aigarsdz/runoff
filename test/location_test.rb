@@ -7,6 +7,7 @@ class TestLocation < MiniTest::Test
     path = Runoff::Location.default_skype_data_location 'aidzis_skype'
 
     if RbConfig::CONFIG['host_os'] =~ /mingw/
+      skip
       if File.exist?("#{ENV['APPDATA']}\\Skype")
         assert_match /\/Users\/[a-zA-Z0-9]+\/AppData\/Roaming\/Skype\/aidzis_skype\/main\.db/, path
       else
