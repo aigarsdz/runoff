@@ -39,7 +39,7 @@ module Runoff
     def self.archive(output_directory)
       timestamp = Time.now.strftime "%Y%m%d%H%M%S"
 
-      Zip::ZipFile.open "#{output_directory}-#{timestamp}.zip", Zip::ZipFile::CREATE do |zipfile|
+      Zip::File.open "#{output_directory}-#{timestamp}.zip", Zip::File::CREATE do |zipfile|
         Dir.entries(output_directory).each do |file|
           if File.file?("#{output_directory}/#{file}")
             zipfile.add file, "#{output_directory}/#{file}"
