@@ -8,6 +8,7 @@ require 'runoff'
 program :name, 'runoff'
 program :version, Runoff::VERSION
 program :description, 'runoff is a simple application to create Skype backups'
+program :help, 'Author', 'Aigars Dzerviniks <dzerviniks.aigars@outlook.com>'
 
 default_command :help
 
