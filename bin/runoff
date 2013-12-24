@@ -15,20 +15,20 @@ global_option '-f', '--from FILE', 'Location of the main.db file'
 global_option '-d', '--destination DIR', 'Location for the exoprted files'
 global_option '-a', '--archive', 'Save files in a Zip archive (defaults to true)'
 
-command :all do |command|
-  command.syntax = 'runoff all [SKYPE_USERNAME] [OPTIONS]'
-  command.description = 'Export all chat history'
+command :all do |c|
+  c.syntax = 'runoff all [SKYPE_USERNAME] [OPTIONS]'
+  c.description = 'Export all chat history'
 
-  command.action do |args, options|
-    Runoff::Commands::All.process args, options.__hash__
+  c.action do |args, options|
+    # TODO: Export all Skype history.
   end
 end
 
-command :chat do |command|
-  command.syntax = 'runoff chat [SKYPE_USERNAME] [OPTIONS]'
-  command.description = 'Export pecified chats history'
+command :some do |c|
+  c.syntax = 'runoff some [SKYPE_USERNAME] [OPTIONS]'
+  c.description = "Export only some chats' history"
 
-  command.action do |args, options|
-    Runoff::Commands::Chat.process args, options.__hash__
+  c.action do |args, options|
+    # TODO: Export the history of only some chats.
   end
 end
