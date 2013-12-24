@@ -12,13 +12,12 @@ program :help, 'Author', 'Aigars Dzerviniks <dzerviniks.aigars@outlook.com>'
 
 default_command :help
 
-global_option '-f', '--from FILE', 'Location of the main.db file'
-global_option '-d', '--destination DIR', 'Location for the exoprted files'
-global_option '-a', '--archive', 'Save files in a Zip archive (defaults to true)'
-
 command :all do |c|
   c.syntax = 'runoff all [SKYPE_USERNAME] [OPTIONS]'
   c.description = 'Export all chat history'
+  c.option '-f', '--from FILE', 'Location of the main.db file'
+  c.option '-d', '--destination DIR', 'Location for the exoprted files'
+  c.option '--[no-]archive', 'Indicates whether to create an archive'
 
   c.action do |args, options|
     # TODO: Export all Skype history.
@@ -28,6 +27,9 @@ end
 command :some do |c|
   c.syntax = 'runoff some [SKYPE_USERNAME] [OPTIONS]'
   c.description = "Export only some chats' history"
+  c.option '-f', '--from FILE', 'Location of the main.db file'
+  c.option '-d', '--destination DIR', 'Location for the exoprted files'
+  c.option '--[no-]archive', 'Indicates whether to create an archive'
 
   c.action do |args, options|
     # TODO: Export the history of only some chats.
