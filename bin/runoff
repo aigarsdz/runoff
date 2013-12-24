@@ -20,7 +20,13 @@ command :all do |c|
   c.option '--[no-]archive', 'Indicates whether to create an archive'
 
   c.action do |args, options|
-    # TODO: Export all Skype history.
+    begin
+      Runoff::Commands::All.process args, options
+    rescue ArgumentError => e
+      puts e
+    rescue StandardError => e
+      puts e
+    end
   end
 end
 

@@ -1,6 +1,6 @@
 module Runoff
 
-  # Public: Contains class methods for finding out the appropriate file paths.
+  # Contains class methods for finding out the appropriate file paths.
   #
   # Examples
   #
