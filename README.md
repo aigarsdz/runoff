@@ -26,9 +26,11 @@ To export specific chats.
 
     runoff some skype_username
 
-If you don't want to put files into an archive, use `-a` option
+If you don't want to put files into an archive, use `--no-archive` option
 
-    runoff all skype_username -a false
+    runoff all skype_username --no-archive
+
+    runoff some skype_username --no-archive
 
 ## What else?
 
