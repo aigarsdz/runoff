@@ -1,3 +1,5 @@
+require 'sequel'
+
 module Runoff
   # Commands that can be executed by the application.
   module Commands
@@ -16,7 +18,10 @@ module Runoff
         end
 
         main_db_path = Runoff::Location.get_database_path args[0], options
-        composition = Runoff::Composition.new main_db_path
+        db_handler = Sequel.sqlite main_db_path
+        file_writer = Runoff::FileWriter.new db_handler
+
+        file_writer.export_database Runoff::SkypeDataFormat.new
       end
     end
   end
