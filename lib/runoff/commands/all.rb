@@ -15,7 +15,7 @@ module Runoff
           raise ArgumentError.new 'You must specify the Skype username or a --from option'
         end
 
-        main_db_path = self.get_database_path args[0], options
+        main_db_path = Runoff::Location.get_database_path args[0], options
         composition = Runoff::Composition.new main_db_path
       end
     end
