@@ -1,5 +1,4 @@
 module Runoff
-
   # Contains class methods for finding out the appropriate file paths.
   #
   # Examples

@@ -3,11 +3,11 @@ require 'sequel'
 module Runoff
   # Commands that can be executed by the application.
   module Commands
-    class All < Command
-      # Public: Export all Skyoe chat history.
+    class All
+      # Public: Exports all Skyoe chat history.
       #
-      # args - Array containing skype username
-      # options - Hash containing user provided options
+      # args - an array containing skype username
+      # options - a hash containing user provided options
       #
       # Examples
       #
