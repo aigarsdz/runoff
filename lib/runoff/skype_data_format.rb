@@ -63,7 +63,7 @@ module Runoff
     #
     # Returns a string that can be used as a file name.
     def get_filename(chatname)
-      pattern = /^#(.+)\/\$(.+);.*$/
+      pattern = /^#(.+)\/\$(.+)?;.*$/
       initiator, respondent = chatname.match(pattern).captures
 
       "#{initiator}-#{respondent}".gsub(/(^-+|-+$)/, '') + ".txt"
