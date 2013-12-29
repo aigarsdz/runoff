@@ -25,8 +25,14 @@ module Runoff
     private
 
 
+    # Internal: Appends a new entry to a file.
+    #
+    # entry - a hash containing "filename" and "content" keys.
+    #
+    # Examples
+    #
+    #   write { filename: "test.txt", content: "test content" }
     def write(entry)
-      # TODO: write the entry to a file.
       path = "#@export_path/#{entry[:filename]}"
 
       File.open(path, "a+") { |file| file.write entry[:content] }

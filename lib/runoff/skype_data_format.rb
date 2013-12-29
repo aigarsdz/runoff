@@ -28,7 +28,7 @@ module Runoff
     #
     # fields - an array representing a single entry in the database.
     #
-    # Example
+    # Examples
     #
     #   build_entry {
     #     chatname: "#john/$doe;1243435",
@@ -56,7 +56,7 @@ module Runoff
     #
     # chatname - a string that must be converted into a valid filename.
     #
-    # Example
+    # Examples
     #
     #   get_filename "#john/$doe;2354657"
     #   # => john-doe.txt
