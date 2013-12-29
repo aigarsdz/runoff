@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module Runoff
   # Contains class methods for finding out the appropriate file paths.
   #
@@ -58,6 +60,17 @@ module Runoff
       else
         "#{ENV['HOME']}/Library/Application Support/Skype/#{skype_username}/main.db"
       end
+    end
+
+    def self.get_export_path(options)
+      path = options.destination || "#{ENV['HOME']}"
+      path = "#{path}/skype_chat_history"
+
+      unless File.exist?(path)
+        FileUtils::mkdir_p path
+      end
+
+      path
     end
 
     private
