@@ -18,10 +18,11 @@ module Runoff
         end
 
         main_db_path = Runoff::Location.get_database_path args[0], options
+        export_path = Runoff::Location.get_export_path options
         db_handler = Sequel.sqlite main_db_path
         file_writer = Runoff::FileWriter.new db_handler
 
-        file_writer.export_database Runoff::SkypeDataFormat.new
+        file_writer.export_database Runoff::SkypeDataFormat.new, export_path
       end
     end
   end

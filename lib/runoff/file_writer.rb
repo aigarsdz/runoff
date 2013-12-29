@@ -7,9 +7,12 @@ module Runoff
     # Public: Exports data based on the provided data format to text files.
     #
     # data_format - an object that defines how the data should be parsed.
+    # export_path - a string that points to the directory where exported files must be saved.
     #
     # Returns true if the operation succeeded or false if it failed.
-    def export_database(data_format)
+    def export_database(data_format, export_path)
+      @export_path = export_path
+
       schema  = data_format.get_schema
       dataset = @db_handler[schema[:table]]
       dataset = dataset.select(*schema[:columns])
@@ -24,6 +27,9 @@ module Runoff
 
     def write(entry)
       # TODO: write the entry to a file.
+      path = "#@export_path/#{entry[:filename]}"
+
+      File.open(path, "a+") { |file| file.write entry[:content] }
     end
   end
 end

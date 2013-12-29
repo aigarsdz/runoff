@@ -30,14 +30,14 @@ module Runoff
     #
     # Example
     #
-    #   build_entry [
+    #   build_entry {
     #     chatname: "#john/$doe;1243435",
     #     from_dispname: "John",
     #     body_xml: "Lorem ipsum",
     #     timestamp: 12435463
-    #   ] # => { filename: john-doe.txt, entry: "[2013-12-27 12:23:43] John: Lorem ipsum" }
+    #   } # => { filename: john-doe.txt, content: "[2013-12-27 12:23:43] John: Lorem ipsum" }
     #
-    # Returns a hash with "filename" and "entry" keys.
+    # Returns a hash with "filename" and "content" keys.
     def build_entry(fields)
       chatname = fields[:chatname]
       username = fields[:from_dispname]
@@ -46,7 +46,7 @@ module Runoff
 
       {
         filename: get_filename(chatname),
-        entry: "[#{datetime}] #{username}: #{message}"
+        content: "[#{datetime}] #{username}: #{message}\n"
       }
     end
 
