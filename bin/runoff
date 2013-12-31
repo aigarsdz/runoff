@@ -40,6 +40,14 @@ command :some do |c|
   c.option '--[no-]archive', 'Indicates whether to create an archive'
 
   c.action do |args, options|
-    # TODO: Export the history of only some chats.
+    begin
+      Runoff::Commands::Some.process args, options
+    rescue ArgumentError => e
+      puts e
+    rescue Sequel::DatabaseError
+      puts "To use runoff you must make sure that the Skype is not running"
+    rescue StandardError => e
+      puts e
+    end
   end
 end

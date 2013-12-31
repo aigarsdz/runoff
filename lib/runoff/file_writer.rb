@@ -2,8 +2,11 @@ require 'zip'
 
 module Runoff
   class FileWriter
+    attr_accessor :selected_entries
+
     def initialize(db_handler)
       @db_handler = db_handler
+      @selected_entries = []
     end
 
     # Public: Exports data based on the provided data format to text files.
@@ -26,8 +29,17 @@ module Runoff
       archive unless create_archive == false
     end
 
-    private
+    def export_database_partially(data_format, export_path, create_archive, &block)
+      @export_path = export_path
 
+      schema  = data_format.get_schema
+      dataset = @db_handler[schema[:table]]
+      indices = block.call self, dataset
+
+      # TODO: export chats based on the provided chat name indices.
+    end
+
+    private
 
     # Internal: Appends a new entry to a file.
     #

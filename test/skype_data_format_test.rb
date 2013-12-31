@@ -32,6 +32,14 @@ describe Runoff::SkypeDataFormat do
     @format.build_entry(fields).must_equal expected
   end
 
+  it "must normalize a Skype specific chat title into a human readable string" do
+    @format.normalize('#john/$doe;2354657').must_equal 'john-doe'
+  end
+
+  it "must normalize a Skype specific chat title into a human readable string even in case of invalid title" do
+    @format.normalize('#john/$;2354657').must_equal 'john'
+  end
+
   it "must parse a Skype specific chat title into a valid file name" do
     @format.send(:get_filename, '#john/$doe;2354657').must_equal 'john-doe.txt'
   end

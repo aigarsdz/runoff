@@ -50,6 +50,23 @@ module Runoff
       }
     end
 
+    # Public: Parse a into a human readable format.
+    #
+    # chatname - a string that must be normalized.
+    #
+    # Examples
+    #
+    #   normalize "#john/$doe;2354657"
+    #   # => john-doe
+    #
+    # Returns a string without unnecessary characters.
+    def normalize(chatname)
+      pattern = /^#(.+)\/\$(.+)?;.*$/
+      initiator, respondent = chatname.match(pattern).captures
+
+      "#{initiator}-#{respondent}".gsub(/(^-+|-+$)/, '')
+    end
+
     private
 
     # Internal: Parses a string into a valid file name.
@@ -63,10 +80,7 @@ module Runoff
     #
     # Returns a string that can be used as a file name.
     def get_filename(chatname)
-      pattern = /^#(.+)\/\$(.+)?;.*$/
-      initiator, respondent = chatname.match(pattern).captures
-
-      "#{initiator}-#{respondent}".gsub(/(^-+|-+$)/, '') + ".txt"
+      normalize(chatname) + ".txt"
     end
   end
 end
