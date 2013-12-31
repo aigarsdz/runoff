@@ -29,7 +29,8 @@ module Runoff
           w.selected_entries.each_with_index { |e, i| puts "[#{i}] #{e}" }
 
           puts # Ensure a blank line.
-          next ask("Chatnames: ") # Return the user response back to the FileWriter class.
+          # Return the user response back to the FileWriter class.
+          next ask("Specify which chats to export separating each number with a comma:")
         end
       end
     end

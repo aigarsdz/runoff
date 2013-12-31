@@ -1,4 +1,5 @@
 require 'zip'
+require 'fileutils'
 
 module Runoff
   class FileWriter
@@ -9,12 +10,10 @@ module Runoff
       @selected_entries = []
     end
 
-    # Public: Exports data based on the provided data format to text files.
+    # Public: Exports all the chats from the database.
     #
     # data_format - an object that defines how the data should be parsed.
     # export_path - a string that points to the directory where exported files must be saved.
-    #
-    # Returns true if the operation succeeded or false if it failed.
     def export_database(data_format, export_path, create_archive)
       @export_path = export_path
 
@@ -29,14 +28,28 @@ module Runoff
       archive unless create_archive == false
     end
 
+    # Public: Exports specific chats from the database.
+    #
+    # data_format - an object that defines how the data should be parsed.
+    # export_path - a string that points to the directory where exported files must be saved.
     def export_database_partially(data_format, export_path, create_archive, &block)
       @export_path = export_path
 
       schema  = data_format.get_schema
       dataset = @db_handler[schema[:table]]
       indices = block.call self, dataset
+      clean_indices = indices.split(',').map { |e| e.strip }
 
-      # TODO: export chats based on the provided chat name indices.
+      clean_indices.each do |i|
+        chatname = @selected_entries[i.to_i]
+        approximation = data_format.denormalize chatname
+        dataset = @db_handler[schema[:table]]
+        dataset = dataset.where(Sequel.like(:chatname, "#{approximation}%"))
+
+        dataset.each { |row| write data_format.build_entry(row) }
+      end
+
+      archive unless create_archive == false
     end
 
     private
@@ -63,6 +76,9 @@ module Runoff
           zf.add(f.sub("#@export_path/", ''), f)
         end
       end
+
+      # Delete the destination directory because it is no longer needed.
+      FileUtils.rm_r @export_path
     end
   end
 end

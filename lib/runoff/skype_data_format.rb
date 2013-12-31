@@ -67,6 +67,23 @@ module Runoff
       "#{initiator}-#{respondent}".gsub(/(^-+|-+$)/, '')
     end
 
+    # Public: Converts a string that is similar to the chat title stored
+    #         in the Skype database.
+    #
+    # dispname - a string that is displayed to the user as a chat title.
+    #
+    # Examples
+    #
+    #   denormalize "john-doe"
+    #   # => "#john/$doe;"
+    #
+    # Returns a string that can be used to query Skype database.
+    def denormalize(dispname)
+      parts = dispname.split '-'
+
+      parts.count == 2 ? "##{parts[0]}/$#{parts[1]};" : "##{parts[0]}/$;"
+    end
+
     private
 
     # Internal: Parses a string into a valid file name.
