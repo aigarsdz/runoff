@@ -24,6 +24,8 @@ command :all do |c|
       Runoff::Commands::All.process args, options
     rescue ArgumentError => e
       puts e
+    rescue Sequel::DatabaseError
+      puts "To use runoff you must make sure that the Skype is not running"
     rescue StandardError => e
       puts e
     end
