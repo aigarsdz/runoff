@@ -24,8 +24,8 @@ module Runoff
     #
     # Returns a String
     def self.get_database_path(username, options)
-      if options.has_key?(:from)
-        options[:from]
+      if options.from
+        options.from
       else
         self.default_skype_data_location username
       end

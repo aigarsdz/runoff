@@ -22,7 +22,7 @@ module Runoff
         db_handler = Sequel.sqlite main_db_path
         file_writer = Runoff::FileWriter.new db_handler
 
-        file_writer.export_database Runoff::SkypeDataFormat.new, export_path
+        file_writer.export_database Runoff::SkypeDataFormat.new, export_path, options.archive
       end
     end
   end
