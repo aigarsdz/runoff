@@ -62,6 +62,11 @@ module Runoff
       end
     end
 
+    # Public: Composes a path where the exported files must be saved.
+    #
+    # options - an object with command line options passed to the runoff executable.
+    #
+    # Returns a string with a directory path.
     def self.get_export_path(options)
       path = options.destination || "#{ENV['HOME']}"
       path = "#{path}/skype_chat_history"
