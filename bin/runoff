@@ -4,6 +4,7 @@ $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 require 'commander/import'
 require 'runoff'
+require 'colorize'
 
 program :name, 'runoff'
 program :version, Runoff::VERSION
@@ -21,13 +22,15 @@ command :all do |c|
 
   c.action do |args, options|
     begin
+      puts "Exporting...".colorize :green
       Runoff::Commands::All.process args, options
+      puts "Export finished.".colorize :green
     rescue ArgumentError => e
-      puts e
+      puts e.colorize :red
     rescue Sequel::DatabaseError
-      puts "To use runoff you must make sure that the Skype is not running"
+      puts "Error: To use runoff you must make sure that the Skype is not running".colorize :red
     rescue StandardError => e
-      puts e
+      puts e.colorize :red
     end
   end
 end
@@ -41,13 +44,15 @@ command :some do |c|
 
   c.action do |args, options|
     begin
+      puts "Exporting...".colorize :green
       Runoff::Commands::Some.process args, options
+      puts "Export finished.".colorize :green
     rescue ArgumentError => e
-      puts e
+      puts e.colorize :red
     rescue Sequel::DatabaseError
-      puts "To use runoff you must make sure that the Skype is not running"
+      puts "Error: To use runoff you must make sure that the Skype is not running".colorize :red
     rescue StandardError => e
-      puts e
+      puts e.colorize :red
     end
   end
 end

@@ -41,7 +41,7 @@ module Runoff
     def build_entry(fields)
       chatname = fields[:chatname]
       username = fields[:from_dispname]
-      message  = fields[:body_xml]
+      message  = parse_xml fields[:body_xml]
       datetime = Time.at(fields[:timestamp]).strftime "%Y-%m-%d %H:%M:%S"
 
       {
@@ -98,6 +98,31 @@ module Runoff
     # Returns a string that can be used as a file name.
     def get_filename(chatname)
       normalize(chatname) + ".txt"
+    end
+
+    # Internal: removes unnecessary XML code from the message.
+    #
+    # message - a string to parse
+    #
+    # Examples
+    #
+    #   parse_xml "<ss type="smile">:)</ss>"
+    #   # => ":)"
+    #
+    # Returns an XML-free string.
+    def parse_xml(message)
+      if message
+        message = message.gsub /<ss type=".*">/, ''
+        message = message.gsub /<\/ss>/, ''
+        message = message.gsub /<a href=".*">/, ''
+        message = message.gsub /<\/a>/, ''
+        message = message.gsub /&apos;/, "'"
+        message = message.gsub /&lt;/, '<'
+        message = message.gsub /&gt;/, '>'
+        message = message.gsub /&quot;/, '"'
+      end
+
+      message
     end
   end
 end

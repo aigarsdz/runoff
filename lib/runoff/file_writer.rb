@@ -69,7 +69,7 @@ module Runoff
 
     # Internal: Creates a Zip file of the destination directory.
     def archive
-      zip_file_name = "#@export_path.zip"
+      zip_file_name = "#@export_path-#{Time.now.strftime "%Y%m%d%H%S%S"}.zip"
 
       Zip::File.open(zip_file_name, Zip::File::CREATE) do |zf|
         Dir[File.join(@export_path, '**', '**')].each do |f|

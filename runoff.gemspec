@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["dzerviniks.aigars@outlook.com"]
   gem.description   = %q{runoff provides functionality to export all the Skype chat history or only specified chats from the Skype SQLite database file to text files}
   gem.summary       = %q{Tool to export Skype chat history from the SQLite database to text files}
-  gem.homepage      = 'https://github.com/aidzis/runoff'
+  gem.homepage      = 'https://github.com/aigarsdz/runoff'
   gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split($/)
@@ -23,4 +23,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sequel'
   gem.add_dependency 'rubyzip'
   gem.add_dependency 'sqlite3'
+  gem.add_dependency 'colorize'
 end
