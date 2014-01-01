@@ -36,6 +36,7 @@ If you don't want to put files into an archive, use `--no-archive` option
 
 Things to do in the future versions:
 
-Nothing. For now.
+- Parse all of XML specific things in the message.
+- Output how many files have been exported.
 
 If you have something to say about this gem or anything else, you can find me on Twitter as [@aigarsdz](http://twitter.com/aigarsdz "@aigarsdz").
