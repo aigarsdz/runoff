@@ -5,7 +5,7 @@ module Runoff
     class Command
       def self.get_file_writer_components(args, options)
         if args.empty? && !options.from
-          raise ArgumentError.new 'You must specify the Skype username or a --from option'
+          raise ArgumentError.new 'Error: You must specify the Skype username or a --from option'
         end
 
         main_db_path = Runoff::Location.get_database_path args[0], options

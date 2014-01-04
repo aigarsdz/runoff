@@ -26,11 +26,11 @@ command :all do |c|
       Runoff::Commands::All.process args, options
       puts "Export finished.".colorize :green
     rescue ArgumentError => e
-      puts e.colorize :red
+      puts e.message.colorize :red
     rescue Sequel::DatabaseError
       puts "Error: To use runoff you must make sure that the Skype is not running".colorize :red
     rescue StandardError => e
-      puts e.colorize :red
+      puts e.message.colorize :red
     end
   end
 end
@@ -48,11 +48,11 @@ command :some do |c|
       Runoff::Commands::Some.process args, options
       puts "Export finished.".colorize :green
     rescue ArgumentError => e
-      puts e.colorize :red
+      puts e.message.colorize :red
     rescue Sequel::DatabaseError
       puts "Error: To use runoff you must make sure that the Skype is not running".colorize :red
     rescue StandardError => e
-      puts e.colorize :red
+      puts e.message.colorize :red
     end
   end
 end
