@@ -3,9 +3,20 @@ module Runoff
   module Commands
     # The base class for every runoff command.
     class Command
+      # Public: Provides a FileWriter object and the destination path for the command.
+      #
+      # args - an array of command line arguments
+      # options - an object with options passed to the command
+      #
+      # Examples
+      #
+      #   file_writer, path = get_file_writer_components [], nil
+      #
+      # Raises an ArgumentError.
+      # Returns a FileWriter object and a string with file path.
       def self.get_file_writer_components(args, options)
         if args.empty? && !options.from
-          raise ArgumentError.new 'Error: You must specify the Skype username or a --from option'
+          fail ArgumentError, 'Error: You must specify the Skype username or a --from option'
         end
 
         main_db_path = Runoff::Location.get_database_path args[0], options
