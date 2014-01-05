@@ -24,12 +24,15 @@ command :all do |c|
     begin
       puts "Exporting...".colorize :green
       Runoff::Commands::All.process args, options
-      puts "Export finished.".colorize :green
+      puts "Export finished".colorize :green
     rescue ArgumentError => e
+      puts "Export terminated".colorize :red
       puts e.message.colorize :red
     rescue Sequel::DatabaseError
+      puts "Export terminated".colorize :red
       puts "Error: To use runoff you must make sure that the Skype is not running".colorize :red
     rescue StandardError => e
+      puts "Export terminated".colorize :red
       puts e.message.colorize :red
     end
   end
@@ -46,12 +49,15 @@ command :some do |c|
     begin
       puts "Exporting...".colorize :green
       Runoff::Commands::Some.process args, options
-      puts "Export finished.".colorize :green
+      puts "Export finished".colorize :green
     rescue ArgumentError => e
+      puts "Export terminated".colorize :red
       puts e.message.colorize :red
     rescue Sequel::DatabaseError
+      puts "Export terminated".colorize :red
       puts "Error: To use runoff you must make sure that the Skype is not running".colorize :red
     rescue StandardError => e
+      puts "Export terminated".colorize :red
       puts e.message.colorize :red
     end
   end
