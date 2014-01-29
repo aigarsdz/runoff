@@ -78,7 +78,8 @@ module Runoff
       path
     end
 
-    private
+    private # This does not actually make the method below private, because they
+            # are class methods. It just serves as a separator.
 
     # Internal: Replaces backslashes with forward slashes and removes drive letter.
     #
