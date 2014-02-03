@@ -1,5 +1,6 @@
 require 'minitest/autorun'
 require 'runoff'
+require 'pry'
 
 describe Runoff::SkypeDataFormat do
   before do
@@ -54,5 +55,14 @@ describe Runoff::SkypeDataFormat do
 
   it "must denormalize a human readable, invalid chat title into a string that can be used in a database query" do
     @format.denormalize('john').must_equal '#john/$;'
+  end
+
+  it "must remove XML data from the message text" do
+    text = '<a href="http://example.com">This</a> is a &quot;message&quot; <ss type="something">:D</ss>' +
+           ' that&apos;s supposed to contain XML characters like &lt; and &gt;'
+
+    expected = 'This is a "message" :D that\'s supposed to contain XML characters like < and >'
+
+    @format.send(:parse_xml, text).must_equal expected
   end
 end
