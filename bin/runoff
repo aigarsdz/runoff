@@ -1,64 +1,21 @@
 #!/usr/bin/env ruby
 
-$:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+require_relative '../lib/runoff/commandline/none'
+require_relative '../lib/runoff/commandline/all'
 
-require 'commander/import'
-require 'runoff'
-require 'colorize'
+options  = { archive: false }
+commands = {
+  '_none' => Runoff::Commandline::None.new(options),
+  'all'   => Runoff::Commandline::All.new(options)
+}
 
-program :name, 'runoff'
-program :version, Runoff::VERSION
-program :description, 'runoff is a simple application to create Skype backups'
-program :help, 'Author', 'Aigars Dzerviniks <dzerviniks.aigars@outlook.com>'
+commands['_none'].parser.order!
+command = commands[ARGV.shift]
 
-default_command :help
-
-command :all do |c|
-  c.syntax = 'runoff all [SKYPE_USERNAME] [OPTIONS]'
-  c.description = 'Export all chat history'
-  c.option '-f', '--from FILE', 'Location of the main.db file'
-  c.option '-d', '--destination DIR', 'Location for the exoprted files'
-  c.option '--[no-]archive', 'Indicates whether to create an archive'
-
-  c.action do |args, options|
-    begin
-      puts "Exporting...".colorize :green
-      Runoff::Commands::All.process args, options
-      puts "Export finished".colorize :green
-    rescue ArgumentError => e
-      puts "Export terminated".colorize :red
-      puts e.message.colorize :red
-    rescue Sequel::DatabaseError
-      puts "Export terminated".colorize :red
-      puts "Error: To use runoff you must make sure that the Skype is not running".colorize :red
-    rescue StandardError => e
-      puts "Export terminated".colorize :red
-      puts e.message.colorize :red
-    end
-  end
-end
-
-command :some do |c|
-  c.syntax = 'runoff some [SKYPE_USERNAME] [OPTIONS]'
-  c.description = "Export only some chats' history"
-  c.option '-f', '--from FILE', 'Location of the main.db file'
-  c.option '-d', '--destination DIR', 'Location for the exoprted files'
-  c.option '--[no-]archive', 'Indicates whether to create an archive'
-
-  c.action do |args, options|
-    begin
-      puts "Exporting...".colorize :green
-      Runoff::Commands::Some.process args, options
-      puts "Export finished".colorize :green
-    rescue ArgumentError => e
-      puts "Export terminated".colorize :red
-      puts e.message.colorize :red
-    rescue Sequel::DatabaseError
-      puts "Export terminated".colorize :red
-      puts "Error: To use runoff you must make sure that the Skype is not running".colorize :red
-    rescue StandardError => e
-      puts "Export terminated".colorize :red
-      puts e.message.colorize :red
-    end
-  end
+if command
+  command.parser.order!
+  command.parser.parse!
+  command.execute ARGV
+else
+  commands['_none'].parser.help
 end

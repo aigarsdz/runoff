@@ -19,7 +19,6 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency 'commander'
   gem.add_dependency 'sequel'
   gem.add_dependency 'rubyzip'
   gem.add_dependency 'sqlite3'

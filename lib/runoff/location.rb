@@ -10,8 +10,9 @@ module Runoff
   class Location
     # Public: Gets a path to the Skype's main.db file.
     #
-    # username - A String containing Skype username
-    # options  - A hash containing command-line options passed to the command.
+    # args     - An Array of commandline arguments, which might contain a String
+    #            with the Skype username.
+    # options  - A hash containing commandline options passed to the command.
     #            If the username is empty, then the hash must contain :from key.
     #
     # Examples
@@ -23,11 +24,13 @@ module Runoff
     #   # => '~/Desktop/main.db'
     #
     # Returns a String
-    def self.get_database_path(username, options)
-      if options.from
-        options.from
+    def self.get_database_path(args, options)
+      if options.key?(:from)
+        options[:from]
+      elsif args.count > 0
+        self.default_skype_data_location args[0]
       else
-        self.default_skype_data_location username
+        raise ArgumentError, 'No username or database file path provided.'
       end
     end
 
@@ -68,7 +71,7 @@ module Runoff
     #
     # Returns a string with a directory path.
     def self.get_export_path(options)
-      path = options.destination || "#{ENV['HOME']}"
+      path = options[:destination] || "#{ENV['HOME']}"
       path = "#{path}/skype_chat_history"
 
       unless File.exist?(path)
@@ -77,9 +80,6 @@ module Runoff
 
       path
     end
-
-    private # This does not actually make the method below private, because they
-            # are class methods. It just serves as a separator.
 
     # Internal: Replaces backslashes with forward slashes and removes drive letter.
     #
