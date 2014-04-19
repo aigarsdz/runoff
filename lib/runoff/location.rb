@@ -5,10 +5,10 @@ module Runoff
   #
   # Examples
   #
-  #   Location::default_skype_data_location skype_username
+  #   Location.default_skype_data_location skype_username
   #   # => /home/user/.Skype/skype_username/main.db
   class Location
-    # Public: Gets a path to the Skype's main.db file.
+    # Public: Gets a path to the Skype main.db file.
     #
     # args     - An Array of commandline arguments, which might contain a String
     #            with the Skype username.
@@ -21,7 +21,7 @@ module Runoff
     #   # => Path to the default Skype database location depending on the operating system.
     #
     #   get_database_path('', { from: '~/Desktop/main.db' })
-    #   # => '~/Desktop/main.db'
+    #   # => '/Users/username/Desktop/main.db'
     #
     # Returns a String
     def self.get_database_path(args, options)
@@ -43,11 +43,15 @@ module Runoff
     #
     #   On Linux:
     #   default_skype_data_location skype_username
-    #   # => /home/user/.Skype/skype_username/mai.db
+    #   # => /home/user/.Skype/skype_username/main.db
     #
     #   On Windows:
     #   default_skype_data_location skype_username
     #   # =>  /Users/user/AppData/Roaming/Skype/skype_username/main.db
+    #
+    #   On Mac OS:
+    #   default_skype_data_location skype_username
+    #   # =>  /Users/user/Library/Application\ Support/Skype/skype_username/main.db
     #
     # Returns a String that contains the path to the Skype database file.
     def self.default_skype_data_location(skype_username)
@@ -67,23 +71,21 @@ module Runoff
 
     # Public: Composes a path where the exported files must be saved.
     #
-    # options - an object with command line options passed to the runoff executable.
+    # options - A Hash with command line options passed to the runoff executable.
     #
     # Returns a string with a directory path.
     def self.get_export_path(options)
       path = options[:destination] || "#{ENV['HOME']}"
       path = "#{path}/skype_chat_history"
 
-      unless File.exist?(path)
-        FileUtils::mkdir_p path
-      end
+      FileUtils::mkdir_p path unless File.exist?(path)
 
       path
     end
 
-    # Internal: Replaces backslashes with forward slashes and removes drive letter.
+    # Public: Replaces backslashes with forward slashes and removes drive letter.
     #
-    # path - String containing a directory path.
+    # path - A String containing a directory path.
     #
     # Examples
     #
@@ -96,7 +98,7 @@ module Runoff
       path.gsub(/^[a-zA-Z]:/, '')
     end
 
-    # Internal: Composes the default Skype database location for the Windows 8 operating system.
+    # Public: Composes the default Skype database location for the Windows 8 operating system.
     #
     # skype_username - A String that contains a username of the Skype account,
     #                  which database we want to access.
