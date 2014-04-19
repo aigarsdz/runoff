@@ -19,13 +19,26 @@ module Runoff
     #
     #   write { chatname: "#first_user/$second_user;d3d86c6b0e3b8320" ... }
     def write(row)
-      export_path = Location.get_export_path @options
+      @export_path = Location.get_export_path @options
       file_name   = get_file_name row[Runoff::COLUMNS[0]]
       format      = SkypeDataFormat.new
 
-      File.open("#{export_path}/#{file_name}", "a+") do |file|
+      File.open("#{@export_path}/#{file_name}", "a+") do |file|
         file.puts format.build_entry(row)
       end
+    end
+
+    # Public: Puts all the exported files in a Zip archive
+    def archive
+      archive_name = "#{@export_path}_#{Time.now.to_i}.zip"
+
+      Zip::File.open archive_name, Zip::File::CREATE do |archive|
+        Dir[File.join(@export_path, '**', '**')].each do |file|
+          archive.add File.basename(file), file
+        end
+      end
+
+      FileUtils.rm_rf @export_path
     end
 
     private

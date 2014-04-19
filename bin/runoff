@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 
+require 'colorize'
+
 require_relative '../lib/runoff/commandline/none'
 require_relative '../lib/runoff/commandline/all'
 
-options  = { archive: false }
+options  = { archive: true }
 commands = {
   '_none' => Runoff::Commandline::None.new(options),
   'all'   => Runoff::Commandline::All.new(options)
@@ -15,7 +17,13 @@ command = commands[ARGV.shift]
 if command
   command.parser.order!
   command.parser.parse!
-  command.execute ARGV
+
+  begin
+    command.execute ARGV
+  rescue StandardError => e
+    puts e.message.colorize :red
+    puts 'Terminated.'.colorize :yellow
+  end
 else
   commands['_none'].parser.help
 end
