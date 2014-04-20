@@ -28,6 +28,10 @@ module Runoff
             exit
           end
 
+          opts.on '-f', '--from PATH', 'Specifies the location of the database file (main.db)' do |path|
+            @options[:from] = path
+          end
+
           opts.on '-d', '--destination PATH', 'Changes the default path for the exported files' do |path|
             @options[:destination] = path
           end
