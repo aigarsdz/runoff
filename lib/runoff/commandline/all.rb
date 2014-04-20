@@ -31,6 +31,10 @@ module Runoff
           opts.on '-d', '--destination PATH', 'Changes the default path for the exported files' do |path|
             @options[:destination] = path
           end
+
+          opts.on '-a', '--[no-]archive', 'Toggles archiving feature' do |enable|
+            @options[:archive] = enable
+          end
         end
       end
 
