@@ -1,7 +1,4 @@
-require 'optparse'
-require 'colorize'
-
-require_relative '../../runoff.rb'
+require_relative 'command'
 
 module Runoff
   # Public: Command classes used by the executable.
@@ -12,14 +9,11 @@ module Runoff
     #
     #   command = Some.new { archive: true }
     #   command.execute [ 'skype_username' ]
-    class Some
-      # Public: Returns an OptionParser object
-      attr_reader :parser
-
+    class Some < Command
       # Public: initialize a new All command object.
       #
       # options - A Hash of commandline options (default { archive: true }).
-      def initialize(options = nil)
+      def initialize(options = {})
         @options = options
         @parser = OptionParser.new do |opts|
           opts.banner = 'Exports specified chats: runoff some [SKYPE_USERNAME] [OPTIONS]'
@@ -46,23 +40,15 @@ module Runoff
       #
       # args - An Array of commandline arguments.
       def execute(args)
-        db_location = Location.get_database_path args, @options
-        chat = Chat.new db_location
-        file_writer = FileWriter.new @options
+        super args do |chat, file_writer|
+          ids = get_requested_chatname_ids chat
 
-        ids = get_requested_chatname_ids chat
-
-        puts 'Exporting...'.colorize :green
-
-        chat.each do |entry|
-          if ids.include?(entry[Runoff::COLUMNS[0]])
-            file_writer.write entry
+          chat.each do |entry|
+            if ids.include?(entry[Runoff::COLUMNS[0]])
+              file_writer.write entry
+            end
           end
         end
-
-        file_writer.archive if @options[:archive]
-
-        puts 'Finished.'.colorize :green
       end
 
       private

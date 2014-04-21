@@ -17,7 +17,7 @@ module Runoff
       # Public: initialize a new None command object.
       #
       # options - A Hash of commandline options (default { archive: false }).
-      def initialize(options = nil)
+      def initialize(options = {})
         @option = options
         @parser = OptionParser.new do |opts|
           opts.banner = <<-END
