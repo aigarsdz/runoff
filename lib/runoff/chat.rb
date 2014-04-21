@@ -1,4 +1,5 @@
 require 'sequel'
+require 'set'
 
 module Runoff
   # Public: Reads data from the SQLite database used by Skype/
@@ -23,6 +24,19 @@ module Runoff
     #   end
     def each
       @messages.select(*Runoff::COLUMNS).each { |row| yield row }
+    end
+
+    def get_chatname_options
+      options = Set.new
+      format  = SkypeDataFormat.new
+
+      @messages.select(*Runoff::COLUMNS[0..1]).each do |row|
+        readable_name = format.parse_chatname row[Runoff::COLUMNS[1]]
+
+        options << { id: row[Runoff::COLUMNS[0]], name: readable_name }
+      end
+
+      options
     end
   end
 end

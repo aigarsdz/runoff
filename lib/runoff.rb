@@ -9,5 +9,5 @@ module Runoff
   TABLE = :Messages
 
   # Public: An Array with all the important column names.
-  COLUMNS = [ :chatname, :timestamp, :from_dispname, :body_xml ]
+  COLUMNS = [ :convo_id, :chatname, :timestamp, :from_dispname, :body_xml ]
 end

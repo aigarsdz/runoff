@@ -20,11 +20,11 @@ module Runoff
     #   write { chatname: "#first_user/$second_user;d3d86c6b0e3b8320" ... }
     def write(row)
       @export_path = Location.get_export_path @options
-      file_name    = get_file_name row[Runoff::COLUMNS[0]]
-      format       = SkypeDataFormat.new
+      @format      = SkypeDataFormat.new
+      file_name    = get_file_name row[Runoff::COLUMNS[1]]
 
       File.open("#{@export_path}/#{file_name}", "a+") do |file|
-        file.puts format.build_entry(row)
+        file.puts @format.build_entry(row)
       end
     end
 
@@ -43,7 +43,7 @@ module Runoff
 
     private
 
-    # Internal: Parses a chatname into a valid file name.
+    # Internal: Converts a chatname into a valid file name.
     #
     # chatname - A String with a Skype chatname.
     #
@@ -52,12 +52,9 @@ module Runoff
     #   get_file_name "#first_user/$second_user;d3d86c6b0e3b8320"
     #   # => first_user_second_user.txt
     #
-    # Returns a valud file name.
+    # Returns a valid file name.
     def get_file_name(chatname)
-      pattern = /^#(.*)\/\$(.*);.*$/
-      parts = chatname.match(pattern).captures
-
-      parts.reject(&:empty?).join('_') + '.txt'
+      @format.parse_chatname(chatname) + '.txt'
     end
   end
 end
