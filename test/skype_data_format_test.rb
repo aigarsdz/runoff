@@ -1,68 +1,29 @@
 require 'minitest/autorun'
 require 'runoff'
-require 'pry'
 
 describe Runoff::SkypeDataFormat do
   before do
     @format = Runoff::SkypeDataFormat.new
   end
 
-  it "must return a schema of the necessary data" do
-    expected = { table: :Messages, columns: [:chatname, :timestamp, :from_dispname, :body_xml] }
-
-    @format.get_schema.must_equal expected
+  it 'must parse a Unix timestamp into a human readable date in YYYY-MM-DD HH:MM:SS format' do
+    @format.send(:format_timestamp, 1398165066).must_equal '2014-04-22 14:11:06'
   end
 
-  it "must yield a schema of the necessary data to a block" do
-    @format.get_schema do |table, columns|
-      table.must_equal :Messages
-      columns.must_equal [:chatname, :timestamp, :from_dispname, :body_xml]
-    end
+  it 'must parse a chatname into a string without any Skype specific characters' do
+    @format.parse_chatname('#santa/$claus;d3d86c6b0e3b8320').must_equal 'santa_claus'
   end
 
-  it "must return a hash with 'filename' and 'content' keys based on the input data" do
-    fields = {
-      chatname: "#john/$doe;1243435",
-      from_dispname: "John",
-      body_xml: "Lorem ipsum",
-      timestamp: 1387756800
+  it 'must create a text entry from the given hash' do
+    data = {
+      chatname: '#santa/$claus;d3d86c6b0e3b8320' ,
+      timestamp: 1398165066,
+      from_dispname: 'santa',
+      body_xml: 'Get your facts first, then you can distort them as you please.'
     }
 
-    expected = { filename: "john-doe.txt", content: "[2013-12-23 02:00:00] John: Lorem ipsum\n" }
+    expected_result = '[2014-04-22 14:11:06] santa: Get your facts first, then you can distort them as you please.'
 
-    @format.build_entry(fields).must_equal expected
-  end
-
-  it "must normalize a Skype specific chat title into a human readable string" do
-    @format.normalize('#john/$doe;2354657').must_equal 'john-doe'
-  end
-
-  it "must normalize a Skype specific chat title into a human readable string even in case of invalid title" do
-    @format.normalize('#john/$;2354657').must_equal 'john'
-  end
-
-  it "must parse a Skype specific chat title into a valid file name" do
-    @format.send(:get_filename, '#john/$doe;2354657').must_equal 'john-doe.txt'
-  end
-
-  it "must parse a Skype specific chat title into a valid file name even in case of invalid title" do
-    @format.send(:get_filename, '#john/$;2354657').must_equal 'john.txt'
-  end
-
-  it "must denormalize a human readable chat title into a string that can be used in a database query" do
-    @format.denormalize('john-doe').must_equal '#john/$doe;'
-  end
-
-  it "must denormalize a human readable, invalid chat title into a string that can be used in a database query" do
-    @format.denormalize('john').must_equal '#john/$;'
-  end
-
-  it "must remove XML data from the message text" do
-    text = '<a href="http://example.com">This</a> is a &quot;message&quot; <ss type="something">:D</ss>' +
-           ' that&apos;s supposed to contain XML characters like &lt; and &gt;'
-
-    expected = 'This is a "message" :D that\'s supposed to contain XML characters like < and >'
-
-    @format.send(:parse_xml, text).must_equal expected
+    @format.build_entry(data).must_equal expected_result
   end
 end

@@ -21,7 +21,7 @@ describe Runoff::Location do
 
   it 'must build a path for a directory, where the files are supposed to be saved, if the destination option is specified' do
     path    = '/Users/Neo/backups'
-    options = Struct.new(:destination).new(path)
+    options = { destination: path }
 
     File.stub :exist?, true do
       Runoff::Location.get_export_path(options).must_equal("#{path}/skype_chat_history")
@@ -29,7 +29,7 @@ describe Runoff::Location do
   end
 
   it 'must build a path for a directory, where the files are supposed to be saved, if the destination option is not specified' do
-    options     = Struct.new(:destination).new(nil)
+    options     = { destination: nil }
     ENV['HOME'] = '/Users/Neo'
 
     File.stub :exist?, true do
@@ -71,7 +71,7 @@ describe Runoff::Location do
 
   it 'must return the path that are specified in the from option' do
     path    = '/Users/Neo/Desktop/main.db'
-    options = Struct.new(:from).new(path)
+    options = { from: path }
 
     Runoff::Location.get_database_path('Neo', options).must_equal(path)
   end
