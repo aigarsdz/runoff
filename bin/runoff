@@ -23,7 +23,7 @@ if command
   begin
     command.execute ARGV
   rescue StandardError => e
-    puts e.message.colorize :red
+    warn e.message.colorize :red
     puts 'Terminated.'.colorize :yellow
   end
 else
