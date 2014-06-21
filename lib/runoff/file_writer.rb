@@ -8,7 +8,7 @@ module Runoff
     #
     # options - A Hash with commandline options.
     def initialize(options)
-      @options = options
+      @export_path = Location.get_export_path options
     end
 
     # Public: Writes a single row of data to a text file.
@@ -19,7 +19,6 @@ module Runoff
     #
     #   write { chatname: "#first_user/$second_user;d3d86c6b0e3b8320" ... }
     def write(row)
-      @export_path = Location.get_export_path @options
       @format      = SkypeDataFormat.new
       file_name    = get_file_name row[Runoff::COLUMNS[1]]
 

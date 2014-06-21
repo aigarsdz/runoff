@@ -7,14 +7,14 @@ require_relative '../lib/runoff/commandline/all'
 require_relative '../lib/runoff/commandline/some'
 
 options  = { archive: true }
-commands = {
+available_commands = {
   '_none' => Runoff::Commandline::None.new(options),
   'all'   => Runoff::Commandline::All.new(options),
   'some'  => Runoff::Commandline::Some.new(options)
 }
 
-commands['_none'].parser.order!
-command = commands[ARGV.shift]
+available_commands['_none'].parser.order!
+command = available_commands[ARGV.shift]
 
 if command
   command.parser.order!

@@ -10,8 +10,7 @@ module Runoff
     #
     # db_location - A String with a path to the database file.
     def initialize(db_location)
-      db_handler = Sequel.sqlite db_location
-      @messages  = db_handler[Runoff::TABLE]
+      @messages = Sequel.sqlite(db_location)[Runoff::TABLE]
     end
 
     # Public: Iterates over all the records in the databse.
@@ -26,6 +25,9 @@ module Runoff
       @messages.select(*Runoff::COLUMNS).each { |row| yield row }
     end
 
+    # Public: Creates a collection with all chats available for export.
+    #
+    # Returns a Set with hashes e.g. [{ id: 12, name: "chatname" }, ... ]
     def get_chatname_options
       options = Set.new
       format  = SkypeDataFormat.new
