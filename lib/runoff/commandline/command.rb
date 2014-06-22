@@ -20,7 +20,7 @@ module Runoff
         puts 'Exporting...'.colorize :green
 
         db_location = Location.get_database_path args, @options
-        chat = Chat.new db_location
+        chat = Chat.new db_location, @options
         file_writer = FileWriter.new @options
 
         yield chat, file_writer if block_given?

@@ -9,6 +9,7 @@ module Runoff
     # options - A Hash with commandline options.
     def initialize(options)
       @export_path = Location.get_export_path options
+      @adapter     = Object.const_get("Runoff::Adapters::#{options[:adapter]}").new
     end
 
     # Public: Writes a single row of data to a text file.
@@ -19,11 +20,10 @@ module Runoff
     #
     #   write { chatname: "#first_user/$second_user;d3d86c6b0e3b8320" ... }
     def write(row)
-      @format      = SkypeDataFormat.new
-      file_name    = get_file_name row[Runoff::COLUMNS[1]]
+      file_name    = @adapter.get_file_name row[Runoff::COLUMNS[1]]
 
       File.open("#{@export_path}/#{file_name}", "a+") do |file|
-        file.puts @format.build_entry(row)
+        file.puts @adapter.build_entry(row)
       end
     end
 
@@ -38,22 +38,6 @@ module Runoff
       end
 
       FileUtils.rm_rf @export_path # Delete the folder.
-    end
-
-    private
-
-    # Internal: Converts a chatname into a valid file name.
-    #
-    # chatname - A String with a Skype chatname.
-    #
-    # Examples
-    #
-    #   get_file_name "#first_user/$second_user;d3d86c6b0e3b8320"
-    #   # => first_user_second_user.txt
-    #
-    # Returns a valid file name.
-    def get_file_name(chatname)
-      @format.parse_chatname(chatname) + '.txt'
     end
   end
 end

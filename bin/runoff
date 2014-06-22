@@ -6,7 +6,7 @@ require_relative '../lib/runoff/commandline/none'
 require_relative '../lib/runoff/commandline/all'
 require_relative '../lib/runoff/commandline/some'
 
-options  = { archive: true }
+options  = { archive: true, adapter: 'TxtAdapter' }
 available_commands = {
   '_none' => Runoff::Commandline::None.new(options),
   'all'   => Runoff::Commandline::All.new(options),

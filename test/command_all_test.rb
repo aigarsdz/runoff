@@ -23,7 +23,7 @@ class CommandAllTest < MiniTest::Unit::TestCase
   end
 
   def test_it_raises_a_ArgumentError_if_called_with_an_empty_list_of_arguments
-    command = Runoff::Commandline::All.new( archive: true )
+    command = Runoff::Commandline::All.new( archive: true, adapter: 'TxtAdapter' )
 
     assert_raises ArgumentError do
       assert_output 'Exporting...' do
@@ -33,7 +33,7 @@ class CommandAllTest < MiniTest::Unit::TestCase
   end
 
   def test_it_exports_all_chat_history_as_a_zip_archive_and_saves_it_in_the_default_location
-    command     = Runoff::Commandline::All.new( archive: true )
+    command     = Runoff::Commandline::All.new( archive: true, adapter: 'TxtAdapter' )
     ENV['HOME'] = @default_output_dir
 
     Runoff::Location.stub :default_skype_data_location, @test_database_location do
@@ -46,7 +46,7 @@ class CommandAllTest < MiniTest::Unit::TestCase
   end
 
   def test_it_exports_all_chat_history_as_a_folder_in_the_default_location_if_a_no_archive_option_is_set
-    command     = Runoff::Commandline::All.new( archive: false )
+    command     = Runoff::Commandline::All.new( archive: false, adapter: 'TxtAdapter' )
     ENV['HOME'] = @default_output_dir
 
     Runoff::Location.stub :default_skype_data_location, @test_database_location do
@@ -61,7 +61,7 @@ class CommandAllTest < MiniTest::Unit::TestCase
   def test_it_exports_all_chat_history_as_a_zip_archive_from_a_custom_location_and_saves_it_in_the_default_location
     test_custom_database_location = "#@current_directory/data/custom_location/test_main.db"
 
-    command     = Runoff::Commandline::All.new( archive: true, from: test_custom_database_location )
+    command     = Runoff::Commandline::All.new( archive: true, adapter: 'TxtAdapter', from: test_custom_database_location )
     ENV['HOME'] = @default_output_dir
 
     Runoff::Location.stub :default_skype_data_location, @test_database_location do
@@ -76,8 +76,8 @@ class CommandAllTest < MiniTest::Unit::TestCase
   def test_it_exports_all_chat_history_as_a_zip_archive_and_saves_it_in_a_custom_location
     custom_output_location = "#@current_directory/data/custom_output_location"
 
-    command          = Runoff::Commandline::All.new( archive: true, destination: custom_output_location )
-    ENV['HOME']      = @default_output_dir
+    command     = Runoff::Commandline::All.new( archive: true, adapter: 'TxtAdapter', destination: custom_output_location )
+    ENV['HOME'] = @default_output_dir
 
     Runoff::Location.stub :default_skype_data_location, @test_database_location do
       assert_output @expected_message do

@@ -23,7 +23,7 @@ class CommandSomeTest < MiniTest::Unit::TestCase
   end
 
   def test_it_raises_a_ArgumentError_if_called_with_an_empty_list_of_arguments
-    command = Runoff::Commandline::Some.new( archive: true )
+    command = Runoff::Commandline::Some.new( archive: true, adapter: 'TxtAdapter' )
 
     assert_raises ArgumentError do
       assert_output 'Exporting...' do
@@ -33,7 +33,7 @@ class CommandSomeTest < MiniTest::Unit::TestCase
   end
 
   def test_it_exports_specified_chat_history_as_a_zip_archive_and_saves_it_in_the_default_location
-    command     = Runoff::Commandline::Some.new( archive: true )
+    command     = Runoff::Commandline::Some.new( archive: true, adapter: 'TxtAdapter' )
     ENV['HOME'] = @default_output_dir
 
     Runoff::Location.stub :default_skype_data_location, @test_database_location do

@@ -9,8 +9,9 @@ module Runoff
     # Public: Initializes a Chat object.
     #
     # db_location - A String with a path to the database file.
-    def initialize(db_location)
+    def initialize(db_location, options)
       @messages = Sequel.sqlite(db_location)[Runoff::TABLE]
+      @adapter  = Object.const_get("Runoff::Adapters::#{options[:adapter]}").new
     end
 
     # Public: Iterates over all the records in the databse.
@@ -30,10 +31,9 @@ module Runoff
     # Returns a Set with hashes e.g. [{ id: 12, name: "chatname" }, ... ]
     def get_chatname_options
       options = Set.new
-      format  = SkypeDataFormat.new
 
       @messages.select(*Runoff::COLUMNS[0..1]).each do |row|
-        readable_name = format.parse_chatname row[Runoff::COLUMNS[1]]
+        readable_name = @adapter.parse_chatname row[Runoff::COLUMNS[1]]
 
         options << { id: row[Runoff::COLUMNS[0]], name: readable_name }
       end

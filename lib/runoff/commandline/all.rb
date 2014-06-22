@@ -12,7 +12,7 @@ module Runoff
     class All < Command
       # Public: initialize a new All command object.
       #
-      # options - A Hash of commandline options (default { archive: true }).
+      # options - A Hash of commandline options (default { archive: true, adapter: 'TxtAdapter' }).
       def initialize(options = {})
         @options = options
         @parser = OptionParser.new do |opts|
@@ -32,6 +32,10 @@ module Runoff
 
           opts.on '-a', '--[no-]archive', 'Toggles archiving feature' do |enable|
             @options[:archive] = enable
+          end
+
+          opts.on '-A', '--adapter', 'Uses a specific file type adapter' do |adapter|
+            @options[:adapter] = adapter.capitalize + 'Adapter'
           end
         end
       end

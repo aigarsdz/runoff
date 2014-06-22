@@ -1,6 +1,7 @@
 require 'runoff/version'
 require 'runoff/location'
-require 'runoff/skype_data_format'
+require 'runoff/adapters/adapter'
+require 'runoff/adapters/txt_adapter'
 require 'runoff/file_writer'
 require 'runoff/chat'
 
