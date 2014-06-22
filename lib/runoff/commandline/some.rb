@@ -41,7 +41,7 @@ module Runoff
       # args - An Array of commandline arguments.
       def execute(args)
         super args do |chat, file_writer|
-          ids = get_requested_chatname_ids chat
+          ids = prompt_for_chatnames chat
 
           chat.each do |entry|
             if ids.include?(entry[Runoff::COLUMNS[0]])
@@ -51,9 +51,7 @@ module Runoff
         end
       end
 
-      private
-
-      # Internal: Asks user to specify, which chats to export.
+      # Public: Asks user to specify, which chats to export.
       #
       # chat - A Chat object.
       #
@@ -63,7 +61,7 @@ module Runoff
       #   # => [120, 86, 201]
       #
       # Returns an Array of conversation ids.
-      def get_requested_chatname_ids(chat)
+      def prompt_for_chatnames(chat)
         puts 'Specify numbers of the chats that you want to export (e.g., 201, 86, 120)'
         puts
 
