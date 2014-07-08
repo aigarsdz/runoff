@@ -27,5 +27,5 @@ if command
     puts 'Terminated.'.colorize :yellow
   end
 else
-  commands['_none'].parser.help
+  puts available_commands['_none'].parser.help
 end

@@ -20,14 +20,14 @@ module Runoff
       def initialize(options = {})
         @option = options
         @parser = OptionParser.new do |opts|
-          opts.banner = <<-END
+          opts.banner = <<END
   runoff - a simple application to create Skype backups
 
   Usage:
 
     runoff <COMMAND> [SKYPE_USERNAME] [OPTIONS]
 
-          END
+END
 
           opts.on '-h', '--help', 'Displays help' do
             puts opts
