@@ -34,6 +34,10 @@ module Runoff
           opts.on '-a', '--[no-]archive', 'Toggles archiving feature' do |enable|
             @options[:archive] = enable
           end
+
+          opts.on '-A', '--adapter [NAME]', 'Uses a specific file type adapter' do |adapter|
+            @options[:adapter] = adapter.capitalize + 'Adapter'
+          end
         end
       end
 

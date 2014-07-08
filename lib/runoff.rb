@@ -2,6 +2,7 @@ require 'runoff/version'
 require 'runoff/location'
 require 'runoff/adapters/adapter'
 require 'runoff/adapters/txt_adapter'
+require 'runoff/adapters/json_adapter'
 require 'runoff/file_writer'
 require 'runoff/chat'
 

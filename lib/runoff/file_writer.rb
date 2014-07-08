@@ -51,8 +51,10 @@ module Runoff
 
     # Internal: Dumps the content buffer to a file.
     def dump
+      content = @adapter.format_file_content @buffer
+
       File.open("#{@export_path}/#@current_file_name", "w") do |file|
-        file.puts @buffer.join("\n")
+        file.puts content
       end
 
       @buffer.clear
