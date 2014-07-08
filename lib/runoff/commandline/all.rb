@@ -45,7 +45,7 @@ module Runoff
       # args - An Array of commandline arguments.
       def execute(args)
         super args do |chat, file_writer|
-          chat.each { |entry| file_writer.write entry }
+          file_writer.write chat.get_messages
         end
       end
     end

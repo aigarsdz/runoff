@@ -1,4 +1,5 @@
 require_relative 'command'
+require 'pry'
 
 module Runoff
   # Public: Command classes used by the executable.
@@ -41,13 +42,12 @@ module Runoff
       # args - An Array of commandline arguments.
       def execute(args)
         super args do |chat, file_writer|
-          ids = prompt_for_chatnames chat
+          ids      = prompt_for_chatnames chat
+          messages = chat.get_messages
 
-          chat.each do |entry|
-            if ids.include?(entry[Runoff::COLUMNS[0]])
-              file_writer.write entry
-            end
-          end
+          selected_messages = messages.keep_if { |m| ids.include? m[Runoff::COLUMNS[0]] }
+
+          file_writer.write selected_messages
         end
       end
 
@@ -71,7 +71,7 @@ module Runoff
 
         puts
         print "Numbers: "
-        options = gets
+        options = STDIN.gets # NOTE: For some reason just gets throws an error here.
 
         options.split(',').map(&:to_i)
       end

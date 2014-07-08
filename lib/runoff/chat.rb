@@ -4,7 +4,6 @@ require 'set'
 module Runoff
   # Public: Reads data from the SQLite database used by Skype/
   class Chat
-    include Enumerable # Not realy necessary at this point.
 
     # Public: Initializes a Chat object.
     #
@@ -14,16 +13,11 @@ module Runoff
       @adapter  = Object.const_get("Runoff::Adapters::#{options[:adapter]}").new
     end
 
-    # Public: Iterates over all the records in the databse.
-    #
-    # Examples
-    #
-    #   each do |row|
-    #     puts row[:chatname]
-    #     puts row[:from_dispname]
-    #   end
-    def each
-      @messages.select(*Runoff::COLUMNS).each { |row| yield row }
+    # Public: Returns a list of all the records in the databse.
+    def get_messages
+      @messages.select(*Runoff::COLUMNS).all.sort_by do |row|
+        [row[Runoff::COLUMNS[0]], row[Runoff::COLUMNS[2]]]
+      end
     end
 
     # Public: Creates a collection with all chats available for export.
