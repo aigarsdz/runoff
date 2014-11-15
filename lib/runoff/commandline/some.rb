@@ -1,5 +1,4 @@
 require_relative 'command'
-require 'pry'
 
 module Runoff
   # Public: Command classes used by the executable.
