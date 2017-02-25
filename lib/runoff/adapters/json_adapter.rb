@@ -40,23 +40,6 @@ module Runoff
         parse_chatname(chatname) + '.json'
       end
 
-      # Public: Parses a chatname into a human readable name.
-      #
-      # raw_chatname - A String with a Skype chatname.
-      #
-      # Examples
-      #
-      #   parse_chatname "#first_user/$second_user;d3d86c6b0e3b8320"
-      #   # => first_user_second_user
-      #
-      # Returns a valid name.
-      def parse_chatname(raw_chatname)
-        pattern = /^#(.*)\/\$(.*);.*$/
-        parts = raw_chatname.match(pattern).captures
-
-        parts.reject(&:empty?).join('_')
-      end
-
       # Public: Formats the provided data buffer so that it could be writter to
       #         a JSON file.
       #

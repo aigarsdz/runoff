@@ -12,6 +12,8 @@ module Runoff
       #
       #   build_entry { chatname: "#first_user/$second_user;d3d86c6b0e3b8320" ... }
       #   # => "[2014-04-18 20:20:12] first_user: This is a text"
+      #
+      # Returns a string
       def build_entry(row)
         formated_data = []
 
@@ -33,26 +35,15 @@ module Runoff
       #   get_file_name "#first_user/$second_user;d3d86c6b0e3b8320"
       #   # => first_user_second_user.txt
       #
+      #   get_file_name "19:g7f8hg76f8g9d6f5ghj4357346@thread.skype"
+      #   #=> g7f8hg76f8g9d6f5ghj4357346.txt
+      #
+      #   get_file_name "john_doe"
+      #   #=> john_doe.txt
+      #
       # Returns a valid file name.
       def get_file_name(chatname)
         parse_chatname(chatname) + '.txt'
-      end
-
-      # Public: Parses a chatname into a human readable name.
-      #
-      # raw_chatname - A String with a Skype chatname.
-      #
-      # Examples
-      #
-      #   parse_chatname "#first_user/$second_user;d3d86c6b0e3b8320"
-      #   # => first_user_second_user
-      #
-      # Returns a valid name.
-      def parse_chatname(raw_chatname)
-        pattern = /^#(.*)\/\$(.*);.*$/
-        parts = raw_chatname.match(pattern).captures
-
-        parts.reject(&:empty?).join('_')
       end
 
       # Public: Formats the provided data buffer so that it could be writter to
