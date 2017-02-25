@@ -27,6 +27,13 @@ module Runoff
 
     runoff <COMMAND> [SKYPE_USERNAME] [OPTIONS]
 
+  Commands:
+
+    all  - Exports all chats
+    some - Exports only specified chats
+
+  Options:
+
 END
 
           opts.on '-h', '--help', 'Displays help' do
