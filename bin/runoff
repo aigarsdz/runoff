@@ -23,8 +23,12 @@ if command
   begin
     command.execute ARGV
   rescue StandardError => e
-   warn e.message.colorize :red
-   puts 'Terminated.'.colorize :yellow
+    if ENV['DEBUG']
+      raise e
+    else
+      warn e.message.colorize :red
+      puts 'Terminated.'.colorize :yellow
+    end
   end
 else
   puts available_commands['_none'].parser.help
