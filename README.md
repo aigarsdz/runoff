@@ -3,6 +3,10 @@
 
 [![Gem Version](https://badge.fury.io/rb/runoff.png)](http://badge.fury.io/rb/runoff)
 
+**Important**. Microsoft has finally added an option to export chat history to Skype, therefore, this gem is no longer necessary and most likely will not be updated.
+
+---
+
 A few years ago I had enough of loosing my Skype chat history every time I reinstalled the operating system, so I decided to write a small application that could export it as plain text files. The application was called SDBR and it was an open source project that I do not  maintain anymore. Why? I could say that I lost my interest in it, but the real reason probably is the implementation.
 
 SDBR was written in C# using WPF, therefore it ran only on Windows. Moreover, it was a GUI application. Yeah, that's a problem, because you don't need the GUI for this kind of functionality. runoff is a command-line tool, that automates the process of exporting your chat history.
@@ -41,10 +45,5 @@ Sometimes you might want to use the exported data in a different app, therefore 
 The resulting JSON file contains an array of objects with 3 keys: `date`, `user` and `message`. Each object represents a single chat record.
 
 ## What else?
-
-Things to do in the future versions:
-
-- Parse all of XML specific things in the message.
-- Output how many files have been exported.
 
 If you have something to say about this gem or anything else, you can find me on Twitter as [@aigarsdz](http://twitter.com/aigarsdz "@aigarsdz").
